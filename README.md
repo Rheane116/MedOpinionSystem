@@ -1,2 +1,3 @@
-# MedOpinionSystem
-本科毕业设计项目；基于信息抽取的医疗机构舆情自动监测系统
+# MedicalOpinionSystem
+需要配置的服务：签名服务crawler_sign的docker、mysql docker、nodejs环境。
+虚拟环境：crawler、bispn
