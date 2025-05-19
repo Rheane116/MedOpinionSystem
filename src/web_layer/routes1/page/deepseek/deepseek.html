@@ -1,0 +1,836 @@
+{% extends 'base_page.html' %}
+{% block title %}
+    DeepSeek分析
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-full">
+            <div class="d-flex flex-wrap align-items-center justify-content-between my-schedule mb-4">
+                <div class="d-flex align-items-center justify-content-between">
+                    <h4 class="font-weight-bold">DeepSeek AI助手</h4>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card card-block card-stretch">
+                        <div class="card-body p-0">
+                            <div class="d-flex justify-content-between align-items-center p-3">
+                                <h5 class="font-weight-bold">对话窗口</h5>
+                            </div>
+
+                            <div id="chat-container" class="p-3" style="height: 500px; overflow-y: auto; background-color: #f8f9fa;">
+                                <!-- 聊天内容将在这里动态添加 -->
+                            </div>
+
+                            <div class="p-3 border-top">
+                               
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <button id="model-toggle" class="btn btn-sm btn-outline-secondary" onclick="toggleModel()">
+                                        DeepThink(R1)
+                                    </button>
+                                    <button class="btn btn-outline-primary btn-sm" onclick="newChat()">
+                                        <i class="ri-add-line"></i> New Chat
+                                    </button>
+                                    <small id="model-status" class="text-muted">当前模型: deepseek-chat</small>
+                                </div>
+                                <div class="input-group">
+                                    <input type="text" id="message-input" class="form-control" placeholder="输入消息..." value="{% if msg %}{{ msg }}{% endif %}">
+                                    <div class="input-group-append">
+                                        <button id="er-button" class="btn btn-warning" onclick="">
+                                            <i class="ri-send-plane-fill"></i> ER抽取
+                                        </button>
+                                        <button id="sumup-button" class="btn btn-success" style="color:white" onclick="">
+                                            <i class="ri-send-plane-fill"></i> 情感分析
+                                        </button>
+                                        <button id="send-button" class="btn btn-primary" onclick="sendMessage()">
+                                            <i class="ri-send-plane-fill"></i> 发送
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 新增任务弹窗 -->
+<div id="taskModal" class="modal-overlay">
+    <div class="modal-container">
+        <div class="modal-header">
+            <h4 class="font-weight-bold">导入评论</h4>
+            <button class="close-modal">&times;</button>
+        </div>
+        <div class="modal-body">
+            <form id="manualForm" class="task-form" method="POST" action="/page/deepseek/er_upload" enctype="multipart/form-data">
+                <!-- 导入方式选择 -->
+                <div class="form-row mb-4">
+                    <div class="form-group">
+                        <label class="form-label font-weight-bold text-muted text-uppercase">* 导入方式</label>
+                        <div class="d-flex align-items-center">
+                            <div class="custom-control custom-radio mr-4">
+                                <input type="radio" id="normalImport" name="importType" class="custom-control-input" value="normal" checked>
+                                <label class="custom-control-label" for="normalImport">常规导入</label>
+                            </div>
+                            <div class="custom-control custom-radio">
+                                <input type="radio" id="taskImport" name="importType" class="custom-control-input" value="task">
+                                <label class="custom-control-label" for="taskImport">舆情数据导入</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 常规导入部分 -->
+                <div id="normalImportSection">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input" id="upload_data" name="upload_data">
+                                <label class="custom-file-label font-weight-bold text-muted" for="upload_data">* 请导入txt文件</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="sep" class="form-label font-weight-bold text-muted text-uppercase">分割符</label>
+                            <input type="text" class="form-control_window" id="sep" name="sep" placeholder="若不输入,则按行分割且不允许空行">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 舆情数据导入部分 -->
+                <div id="taskImportSection" style="display: none;">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="task_id" class="form-label font-weight-bold text-muted text-uppercase">* 舆情抓取数据导入</label>
+                            <input type="text" class="form-control_window" id="task_id" name="task_id" placeholder="请输入任务编号">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="prompt" class="form-label font-weight-bold text-muted">* prompt构建</label>
+                        <textarea class="form-control_window" id="prompt" name="prompt" rows="6" style="resize: vertical; min-height: 120px; overflow-y: auto;">{{ er_prompt }}</textarea>
+                    </div>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary cancel-btn">取消</button>
+                    <button type="submit" class="btn btn-primary">提交</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- 新增错误提示容器 -->
+<div id="errorToast" class="error-toast" style="display: none;">
+    <div>
+        <i class="fas fa-exclamation-circle"></i>
+        <span id="errorMessage"></span>
+    </div>
+    <div class="error-toast-close" onclick="hideErrorToast()">
+        <i class="fas fa-times"></i>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.getElementById('sumup-button').addEventListener('click', async function() {
+        try {
+            const response = await fetch('/page/deepseek/get_preset_message');
+            const data = await response.json();
+            
+            if (data.preset_message) {
+                document.getElementById('message-input').value = data.preset_message;
+            } else {
+                console.error('未能获取预设信息');
+            }
+        } catch (error) {
+            console.error('请求失败:', error);
+        }
+    });
+</script>
+<script>
+    // 弹窗控制逻辑
+    const modal = document.getElementById('taskModal');
+    const newTaskBtn = document.getElementById('er-button');
+    const closeModal = document.querySelector('.close-modal');
+    const cancelBtn = document.querySelector('.cancel-btn');
+
+    newTaskBtn.addEventListener('click', () => {
+        modal.style.display = 'flex';
+    });
+
+    closeModal.addEventListener('click', () => {
+        modal.style.display = 'none';
+    });
+
+    cancelBtn.addEventListener('click', () => {
+        modal.style.display = 'none';
+    });
+</script>
+
+
+<!-- error script -->
+<script>
+
+    // 显示错误提示
+    function showErrorToast(message) {
+        const toast = document.getElementById('errorToast');
+        const errorMessage = document.getElementById('errorMessage');
+        
+        errorMessage.textContent = message;
+        toast.style.display = 'flex';
+        
+        // 3秒后自动隐藏
+        setTimeout(() => {
+            toast.style.display = 'none';
+        }, 5000);
+    }
+
+    // 隐藏错误提示
+    function hideErrorToast() {
+        document.getElementById('errorToast').style.display = 'none';
+    }
+
+    // 处理表单提交
+    document.getElementById('manualForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        const formData = new FormData(this);
+        
+        try {
+            const response = await fetch(this.action, {
+                method: 'POST',
+                body: formData
+            });
+            
+            const result = await response.json();
+            
+            if (result.success) {
+                window.location.href = result.redirect;
+            } else {
+                showErrorToast(result.message);
+            }
+        } catch (error) {
+            showErrorToast('网络错误，请稍后再试');
+        }
+    });
+</script>
+
+<script>
+    // 添加DeepSeek图标样式
+    const style = document.createElement('style');
+    style.textContent = `
+        .ai-message {
+            position: relative;
+            padding: 15px 20px 15px 60px;  /* 增加左侧padding给图标留空间 */
+            margin-bottom: 15px;
+            border-radius: 10px;
+            background-color: #FFFFFF;
+            max-width: 80%;
+            margin-right: auto;
+        }
+        .ai-message::before {
+            content: '';
+            position: absolute;
+            left: 15px;
+            top: 15px;
+            width: 30px;
+            height: 30px;
+            background-image: url('/static/picture/deepseek.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+        .user-message {
+            padding: 15px 20px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            background-color: #E1F1FA;
+            color: black;  /* 修改字体为黑色 */
+            max-width: 80%;
+            margin-left: auto;
+        }
+        #chat-container {
+            height: 500px;
+            overflow-y: auto;
+            background-color: #FFFFFF;
+            padding: 15px;
+        }
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(0,0,0,.1);
+            border-radius: 50%;
+            border-top-color: #007bff;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 10px;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        .thinking-message {
+            color: #6c757d;
+            font-style: italic;
+        }
+        .max-length-warning {
+            color: #dc3545;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        .btn-disabled {
+            pointer-events: none;
+            opacity: 0.65;
+        }
+    `;
+    document.head.appendChild(style);
+
+    // 当前模型状态
+    let currentModel = 'deepseek-chat';
+    // 从本地存储加载聊天历史
+    let chatHistory = JSON.parse(localStorage.getItem('deepseek_chat_history')) || [];
+    // 消息计数
+    let messageCount = 0;
+    // 是否正在思考
+    let isThinking = false;
+
+    function formatMessage(message) {
+        // 处理粗体
+        message = message.replace(/\*\*(.*?)\*\*/g, '<span class="font-weight-bold">$1</span>');
+        
+        // 处理标题和缩进
+        message = message.split('\n').map(line => {
+            if (line.startsWith('##')) {
+                return '\n<div class="h5 mt-3 mb-2">' + line.substring(2).trim() + '</div>';
+            }
+            return line;
+        }).join('\n');
+
+        return message;
+    }
+
+    function setThinkingState(isThinking) {
+        const sendButton = document.getElementById('send-button');
+        const erButton = document.getElementById('er-button');
+        const sumupButton = document.getElementById('sumup-button');
+        const messageInput = document.getElementById('message-input');
+        
+        if (isThinking) {
+            sendButton.innerHTML = '<i class="ri-time-line"></i> 等待';
+            erButton.innerHTML = '<i class="ri-time-line"></i> 等待';
+            sumupButton.innerHTML = '<i class="ri-time-line"></i> 等待';
+            sendButton.classList.add('btn-secondary');
+            sendButton.classList.remove('btn-primary');
+            sendButton.classList.add('btn-disabled');
+            erButton.classList.add('btn-secondary');
+            erButton.classList.remove('btn-warning');
+            erButton.classList.add('btn-disabled');
+            sumupButton.classList.add('btn-secondary');
+            sumupButton.classList.remove('btn-success');
+            sumupButton.classList.add('btn-disabled');
+            messageInput.disabled = true;
+        } else {
+            sendButton.innerHTML = '<i class="ri-send-plane-fill"></i> 发送';
+            sendButton.classList.add('btn-primary');
+            sendButton.classList.remove('btn-secondary');
+            sendButton.classList.remove('btn-disabled');
+            erButton.innerHTML = '<i class="ri-send-plane-fill"></i> ER抽取';
+            erButton.classList.add('btn-warning');
+            erButton.classList.remove('btn-secondary');
+            erButton.classList.remove('btn-disabled');
+            sumupButton.innerHTML = '<i class="ri-send-plane-fill"></i> 情感分析';
+            sumupButton.classList.add('btn-success');
+            sumupButton.classList.remove('btn-secondary');
+            sumupButton.classList.remove('btn-disabled');
+            messageInput.disabled = false;
+        }
+    }
+
+    function addMessage(message, isUser) {
+        const chatContainer = document.getElementById('chat-container');
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `message ${isUser ? 'user-message' : 'ai-message'}`;
+        messageDiv.innerHTML = isUser ? message : formatMessage(message);
+        chatContainer.appendChild(messageDiv);
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+
+        // 更新消息计数
+        if (isUser) {
+            messageCount++;
+        }
+
+        // 检查是否达到最大长度
+        if (messageCount >= 10 && !isUser) {
+            const warningDiv = document.createElement('div');
+            warningDiv.className = 'message ai-message max-length-warning';
+            warningDiv.textContent = '已达到最大长度啦，请开启新对话';
+            chatContainer.appendChild(warningDiv);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+    }
+
+    function loadChatHistory() {
+        const chatContainer = document.getElementById('chat-container');
+        chatContainer.innerHTML = '';
+        messageCount = 0;
+
+        chatHistory.forEach(item => {
+            addMessage(item.message, item.isUser);
+        });
+
+        // 如果历史消息为空，添加欢迎消息
+        if (chatHistory.length === 0) {
+            addMessage('你好，有什么我能帮助的吗？', false);
+        }
+    }
+
+    function newChat() {
+        // 清除本地存储的聊天历史
+        localStorage.removeItem('deepseek_chat_history');
+        chatHistory = [];
+        messageCount = 0;
+        
+        // 清除聊天界面
+        document.getElementById('chat-container').innerHTML = '';
+        
+        // 发送请求到后端重置对话
+        fetch('/page/reset_chat', {
+            method: 'POST'
+        }).then(response => {
+            if (response.ok) {
+                // 添加欢迎消息
+                addMessage('你好，有什么我能帮助的吗？', false);
+            }
+        });
+    }
+
+    function toggleModel() {
+        if (isThinking) return; // 思考时不允许切换模型
+        
+        currentModel = currentModel === 'deepseek-reasoner' ? 'deepseek-chat' : 'deepseek-reasoner';
+        document.getElementById('model-status').textContent = `当前模型: ${currentModel}`;
+        
+        // 更新按钮样式
+        const button = document.getElementById('model-toggle');
+        if (currentModel === 'deepseek-chat') {
+            button.classList.remove('btn-primary');
+            button.classList.add('btn-outline-secondary');
+        } else {
+            button.classList.remove('btn-outline-secondary');
+            button.classList.add('btn-primary');
+        }
+    }
+
+    async function sendMessage() {
+        if (isThinking) return; // 防止重复发送
+        
+        const input = document.getElementById('message-input');
+        const message = input.value.trim();
+        
+        if (!message) return;
+        
+        addMessage(message, true);
+        // 保存到聊天历史
+        chatHistory.push({message: message, isUser: true});
+        localStorage.setItem('deepseek_chat_history', JSON.stringify(chatHistory));
+        
+        input.value = '';
+
+        // 检查是否达到最大长度
+        if (messageCount >= 10) {
+            return;
+        }
+
+        // 设置思考状态
+        isThinking = true;
+        setThinkingState(true);
+
+        // 添加"思考中"消息
+        const loadingDiv = document.createElement('div');
+        loadingDiv.className = 'message ai-message';
+        loadingDiv.innerHTML = `
+            <div class="d-flex align-items-center thinking-message">
+                <div class="loading-spinner"></div>
+                <span>思考中，请稍等...</span>
+            </div>
+        `;
+        document.getElementById('chat-container').appendChild(loadingDiv);
+        const chatContainer = document.getElementById('chat-container');
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+
+        try {
+            const response = await fetch('/page/deepseek/send', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ 
+                    message: message,
+                    model: currentModel
+                })
+            });
+
+            // 移除"思考中"消息
+            loadingDiv.remove();
+            
+            // 创建消息容器
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message ai-message';
+            document.getElementById('chat-container').appendChild(messageDiv);
+            
+            const reader = new ReadableStreamDefaultReader(response.body);
+            const decoder = new TextDecoder();
+            let buffer = '';
+            let fullResponse = '';
+
+            while (true) {
+                const {value, done} = await reader.read();
+                if (done) break;
+                
+                buffer += decoder.decode(value, {stream: true});
+                const lines = buffer.split('\n');
+                buffer = lines.pop() || '';
+
+                for (const line of lines) {
+                    if (line.startsWith('data: ')) {
+                        try {
+                            const data = JSON.parse(line.slice(6));
+                            fullResponse += data.content;
+                            messageDiv.innerHTML = formatMessage(fullResponse);
+                            chatContainer.scrollTop = chatContainer.scrollHeight;
+                        } catch (e) {
+                            console.error('解析错误:', e);
+                        }
+                    }
+                }
+            }
+
+            // 保存AI回复到聊天历史
+            chatHistory.push({message: fullResponse, isUser: false});
+            localStorage.setItem('deepseek_chat_history', JSON.stringify(chatHistory));
+        } catch (error) {
+            // 移除"思考中"消息
+            loadingDiv.remove();
+            addMessage('发生错误: ' + error, false);
+        } finally {
+            // 恢复发送按钮状态
+            isThinking = false;
+            setThinkingState(false);
+        }
+    }
+
+    // 页面加载时显示历史消息
+    document.addEventListener('DOMContentLoaded', function() {
+        loadChatHistory();
+        document.getElementById('model-status').textContent = `当前模型: ${currentModel}`;
+    });
+
+    document.getElementById('message-input').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter' && !isThinking) {
+            sendMessage();
+        }
+    });
+</script>
+
+<!-- 在 deepseek.html 的 scripts 块中添加/修改以下代码 -->
+<script>
+    // 修改 addMessage 函数，添加模型类型标识
+    function addMessage(message, isUser, modelType = 'chat') {
+        const chatContainer = document.getElementById('chat-container');
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `message ${isUser ? 'user-message' : 'ai-message'} ${modelType}-message`;
+        
+        // 添加模型标识
+        const modelBadge = !isUser ? 
+            `<div class="model-badge">${modelType === 'reasoner' ? 'DeepThink(R1)' : 'DeepSeek'}</div>` : '';
+        
+        messageDiv.innerHTML = `${modelBadge}${isUser ? message : formatMessage(message)}`;
+        chatContainer.appendChild(messageDiv);
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+        
+        // 更新消息计数
+        if (isUser) {
+            messageCount++;
+        }
+    }
+
+    // 添加思考状态指示器
+    function addThinkingIndicator(modelType = 'chat') {
+        const chatContainer = document.getElementById('chat-container');
+        const thinkingDiv = document.createElement('div');
+        thinkingDiv.className = `message ai-message thinking-indicator ${modelType}-thinking`;
+        thinkingDiv.id = 'thinking-indicator';
+        thinkingDiv.innerHTML = `
+            <div class="d-flex align-items-center">
+                <div class="loading-spinner"></div>
+                <span>${modelType === 'reasoner' ? '深度思考中...' : '思考中...'}</span>
+                ${modelType === 'reasoner' ? '<div class="reasoner-pulse"></div>' : ''}
+            </div>
+        `;
+        chatContainer.appendChild(thinkingDiv);
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+        return thinkingDiv;
+    }
+
+    // 修改 sendMessage 函数
+    async function sendMessage() {
+        if (isThinking) return;
+        
+        const input = document.getElementById('message-input');
+        const message = input.value.trim();
+        
+        if (!message) return;
+        
+        addMessage(message, true);
+        chatHistory.push({message: message, isUser: true});
+        localStorage.setItem('deepseek_chat_history', JSON.stringify(chatHistory));
+        
+        input.value = '';
+
+        if (messageCount >= 10) return;
+
+        // 设置思考状态
+        isThinking = true;
+        setThinkingState(true);
+        
+        // 添加思考指示器（根据当前模型类型）
+        const thinkingDiv = addThinkingIndicator(currentModel === 'deepseek-reasoner' ? 'reasoner' : 'chat');
+
+        try {
+            const response = await fetch('/page/deepseek/send', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ 
+                    message: message,
+                    model: currentModel
+                })
+            });
+
+            // 移除思考指示器
+            thinkingDiv.remove();
+            
+            // 创建消息容器
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ai-message ${currentModel === 'deepseek-reasoner' ? 'reasoner-message' : 'chat-message'}`;
+            messageDiv.innerHTML = currentModel === 'deepseek-reasoner' ? 
+                '<div class="model-badge">DeepThink(R1)</div>' : 
+                '<div class="model-badge">DeepSeek</div>';
+            document.getElementById('chat-container').appendChild(messageDiv);
+            
+            const reader = new ReadableStreamDefaultReader(response.body);
+            const decoder = new TextDecoder();
+            let buffer = '';
+            let fullResponse = '';
+
+            while (true) {
+                const {value, done} = await reader.read();
+                if (done) break;
+                
+                buffer += decoder.decode(value, {stream: true});
+                const lines = buffer.split('\n');
+                buffer = lines.pop() || '';
+
+                for (const line of lines) {
+                    if (line.startsWith('data: ')) {
+                        try {
+                            const data = JSON.parse(line.slice(6));
+                            fullResponse += data.content;
+                            messageDiv.innerHTML = `
+                                ${currentModel === 'deepseek-reasoner' ? '<div class="model-badge">DeepThink(R1)</div>' : '<div class="model-badge">DeepSeek</div>'}
+                                ${formatMessage(fullResponse)}
+                            `;
+                            chatContainer.scrollTop = chatContainer.scrollHeight;
+                        } catch (e) {
+                            console.error('解析错误:', e);
+                        }
+                    }
+                }
+            }
+
+            chatHistory.push({message: fullResponse, isUser: false});
+            localStorage.setItem('deepseek_chat_history', JSON.stringify(chatHistory));
+        } catch (error) {
+            thinkingDiv.remove();
+            addMessage('发生错误: ' + error, false);
+        } finally {
+            isThinking = false;
+            setThinkingState(false);
+        }
+    }
+
+    // 添加样式
+    const style = document.createElement('style');
+    style.textContent = `
+        /* 原有样式保持不变... */
+        
+        /* 新增样式 */
+        .model-badge {
+            font-size: 0.8rem;
+            color: #666;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        .reasoner-message {
+            border-left: 4px solid #6c5ce7;
+        }
+        
+        .chat-message {
+            border-left: 4px solid #00b894;
+        }
+        
+        .thinking-indicator {
+            color: #666;
+            font-style: italic;
+        }
+        
+        .reasoner-thinking {
+            border-left: 4px solid #6c5ce7;
+        }
+        
+        .reasoner-pulse {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #6c5ce7;
+            margin-left: 10px;
+            animation: pulse 1.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(0.95); opacity: 0.7; }
+            50% { transform: scale(1.1); opacity: 1; }
+            100% { transform: scale(0.95); opacity: 0.7; }
+        }
+        
+        .reasoner-message .model-badge {
+            color: #6c5ce7;
+        }
+    `;
+    document.head.appendChild(style);
+</script>
+
+<!-- 在 scripts 块中添加以下代码 -->
+<script>
+// 导入方式切换逻辑
+document.addEventListener('DOMContentLoaded', function() {
+    const normalImport = document.getElementById('normalImport');
+    const taskImport = document.getElementById('taskImport');
+    const normalSection = document.getElementById('normalImportSection');
+    const taskSection = document.getElementById('taskImportSection');
+    const uploadInput = document.getElementById('upload_data');
+    const taskIdInput = document.getElementById('task_id');
+
+    // 设置必填字段
+    function updateRequiredFields() {
+        if (normalImport.checked) {
+            uploadInput.required = true;
+            taskIdInput.required = false;
+        } else {
+            uploadInput.required = false;
+            taskIdInput.required = true;
+        }
+    }
+
+    // 切换显示部分
+    function toggleSections() {
+        if (normalImport.checked) {
+            normalSection.style.display = 'block';
+            taskSection.style.display = 'none';
+        } else {
+            normalSection.style.display = 'none';
+            taskSection.style.display = 'block';
+        }
+        updateRequiredFields();
+    }
+
+    // 添加事件监听
+    normalImport.addEventListener('change', toggleSections);
+    taskImport.addEventListener('change', toggleSections);
+
+    // 初始化状态
+    toggleSections();
+});
+</script>
+
+<style>
+/* 添加单选按钮样式 */
+.custom-control {
+    position: relative;
+    display: inline-block;
+    min-height: 1.5rem;
+    padding-left: 1.5rem;
+}
+
+.custom-control-input {
+    position: absolute;
+    left: 0;
+    z-index: -1;
+    width: 1rem;
+    height: 1.25rem;
+    opacity: 0;
+}
+
+.custom-control-label {
+    position: relative;
+    margin-bottom: 0;
+    vertical-align: top;
+    cursor: pointer;
+}
+
+.custom-control-label::before {
+    position: absolute;
+    top: 0.25rem;
+    left: -1.5rem;
+    display: block;
+    width: 1rem;
+    height: 1rem;
+    pointer-events: none;
+    content: "";
+    background-color: #fff;
+    border: #adb5bd solid 1px;
+    border-radius: 50%;
+}
+
+.custom-control-input:checked ~ .custom-control-label::before {
+    color: #fff;
+    border-color: #3378FF;
+    background-color: #3378FF;
+}
+
+.custom-control-input:focus ~ .custom-control-label::before {
+    box-shadow: 0 0 0 0.2rem rgba(51, 120, 255, 0.25);
+}
+
+.custom-control-input:focus:not(:checked) ~ .custom-control-label::before {
+    border-color: #80bdff;
+}
+
+.custom-control-input:not(:disabled):active ~ .custom-control-label::before {
+    color: #fff;
+    background-color: #b3d7ff;
+    border-color: #b3d7ff;
+}
+
+.custom-control-input:disabled ~ .custom-control-label {
+    color: #6c757d;
+}
+
+.custom-control-input:disabled ~ .custom-control-label::before {
+    background-color: #e9ecef;
+}
+</style>
+{% endblock %}

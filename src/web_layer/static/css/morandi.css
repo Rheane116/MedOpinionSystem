@@ -1,0 +1,186 @@
+:root {
+    /* 莫兰迪色系主色调 */
+    --morandi-primary: #8B8B8B;    /* 灰蓝 */
+    --morandi-secondary: #A6A6A6;  /* 灰粉 */
+    --morandi-accent: #B5B5B5;     /* 灰绿 */
+    --morandi-background: #F5F5F5; /* 浅灰背景 */
+    --morandi-text: #4A4A4A;       /* 深灰文本 */
+    --morandi-border: #D8D8D8;     /* 边框色 */
+    --morandi-hover: #E0E0E0;      /* 悬停色 */
+    --morandi-active: #C8C8C8;     /* 激活色 */
+}
+
+/* 全局样式 */
+body {
+    background-color: var(--morandi-background);
+    color: var(--morandi-text);
+    font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+}
+
+/* 导航栏样式 */
+.navbar {
+    background-color: var(--morandi-primary);
+    border-bottom: 1px solid var(--morandi-border);
+}
+
+.navbar-brand {
+    color: white !important;
+}
+
+.nav-link {
+    color: rgba(255, 255, 255, 0.8) !important;
+}
+
+.nav-link:hover {
+    color: white !important;
+    background-color: var(--morandi-hover);
+}
+
+/* 卡片样式 */
+.card {
+    background-color: white;
+    border: 1px solid var(--morandi-border);
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.card-header {
+    background-color: var(--morandi-background);
+    border-bottom: 1px solid var(--morandi-border);
+}
+
+/* 按钮样式 */
+.btn-primary {
+    background-color: var(--morandi-primary);
+    border-color: var(--morandi-primary);
+}
+
+.btn-primary:hover {
+    background-color: var(--morandi-secondary);
+    border-color: var(--morandi-secondary);
+}
+
+.btn-secondary {
+    background-color: var(--morandi-accent);
+    border-color: var(--morandi-accent);
+}
+
+/* 表格样式 */
+.table {
+    background-color: white;
+}
+
+.table thead th {
+    background-color: var(--morandi-background);
+    border-bottom: 2px solid var(--morandi-border);
+    color: var(--morandi-text);
+}
+
+.table tbody tr:hover {
+    background-color: var(--morandi-hover);
+}
+
+/* 表单样式 */
+.form-control {
+    border: 1px solid var(--morandi-border);
+    border-radius: 4px;
+}
+
+.form-control:focus {
+    border-color: var(--morandi-primary);
+    box-shadow: 0 0 0 0.2rem rgba(139, 139, 139, 0.25);
+}
+
+/* 模态框样式 */
+.modal-content {
+    background-color: white;
+    border: 1px solid var(--morandi-border);
+}
+
+.modal-header {
+    background-color: var(--morandi-background);
+    border-bottom: 1px solid var(--morandi-border);
+}
+
+/* 标签样式 */
+.badge {
+    background-color: var(--morandi-accent);
+    color: white;
+}
+
+/* 进度条样式 */
+.progress {
+    background-color: var(--morandi-background);
+}
+
+.progress-bar {
+    background-color: var(--morandi-primary);
+}
+
+/* 警告框样式 */
+.alert {
+    border: 1px solid var(--morandi-border);
+    border-radius: 4px;
+}
+
+.alert-primary {
+    background-color: rgba(139, 139, 139, 0.1);
+    border-color: var(--morandi-primary);
+    color: var(--morandi-text);
+}
+
+/* 分页样式 */
+.pagination .page-link {
+    color: var(--morandi-text);
+    border-color: var(--morandi-border);
+}
+
+.pagination .page-item.active .page-link {
+    background-color: var(--morandi-primary);
+    border-color: var(--morandi-primary);
+}
+
+/* 下拉菜单样式 */
+.dropdown-menu {
+    background-color: white;
+    border: 1px solid var(--morandi-border);
+}
+
+.dropdown-item:hover {
+    background-color: var(--morandi-hover);
+}
+
+/* 工具提示样式 */
+.tooltip-inner {
+    background-color: var(--morandi-primary);
+}
+
+/* 弹出框样式 */
+.popover {
+    background-color: white;
+    border: 1px solid var(--morandi-border);
+}
+
+.popover-header {
+    background-color: var(--morandi-background);
+    border-bottom: 1px solid var(--morandi-border);
+}
+
+/* 自定义滚动条样式 */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--morandi-background);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--morandi-accent);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--morandi-primary);
+} 

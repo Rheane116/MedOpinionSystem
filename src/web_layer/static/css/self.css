@@ -1,0 +1,125 @@
+/* 自定义顶部导航栏样式 */
+.custom-top-navbar {
+background: #4665c5;
+box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+padding: 0.5rem 1rem;
+position: fixed;
+top: 0;
+left: 0;
+right: 0;
+z-index: 1000;
+}
+
+.custom-nav-container {
+display: flex;
+align-items: center;
+justify-content: space-between;
+width: 100%;
+}
+
+.custom-nav-menu {
+display: flex;
+align-items: center;
+margin: 0;
+padding: 0;
+list-style: none;
+}
+
+.custom-nav-item {
+margin-right: 1.5rem;
+position: relative;
+}
+
+.custom-nav-link {
+color: white;
+font-size: 1rem;
+font-weight: 500;
+display: flex;
+align-items: center;
+padding: 0.5rem 1rem;
+border-radius: 4px;
+transition: all 0.3s;
+}
+
+.custom-nav-link:hover {
+background: rgba(255, 255, 255, 0.1);
+color: white;
+text-decoration: none;
+}
+
+.custom-nav-link svg {
+margin-right: 0.5rem;
+width: 20px;
+height: 20px;
+}
+
+/*.custom-nav-link.active {
+background: rgba(255, 255, 255, 0.2);
+}*/
+
+.custom-nav-link.active {
+color: white;
+background: rgba(255, 255, 255, 0.2);
+position: relative;
+}
+
+/*.custom-nav-link.active:after {
+content: '';
+position: absolute;
+bottom: -8px;
+left: 50%;
+transform: translateX(-50%);
+width: 60%;
+height: 3px;
+background: white;
+border-radius: 3px;
+}*/
+
+.custom-logo {
+display: flex;
+align-items: center;
+color: white;
+font-weight: bold;
+font-size: 1.25rem;
+margin-right: 2rem;
+}
+
+.custom-logo img {
+height: 40px;
+margin-right: 10px;
+}
+
+/* 调整内容区域 */
+.content-page {
+margin-top: 70px; /* 为顶部导航栏留出空间 */
+}
+
+/* 用户菜单样式 */
+.user-menu {
+display: flex;
+align-items: center;
+}
+
+.user-name {
+color: white;
+font-weight: 500;
+}
+
+/* 响应式调整 */
+@media (max-width: 992px) {
+.custom-nav-container {
+    flex-wrap: wrap;
+}
+
+.custom-nav-menu {
+    order: 3;
+    width: 100%;
+    margin-top: 0.5rem;
+    overflow-x: auto;
+    white-space: nowrap;
+}
+
+.custom-nav-item {
+    margin-right: 1rem;
+}
+}

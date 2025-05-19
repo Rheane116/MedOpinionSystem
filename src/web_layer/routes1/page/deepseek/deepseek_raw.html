@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AI聊天界面</title>
+    <meta charset="UTF-8">
+    <link rel="shortcut icon" href="{
+  
+  { url_for('static', filename='favicon.ico') }}">
+    <style>
+        body {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+        }
+        #chat-container {
+            height: 400px;
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-bottom: 10px;
+            overflow-y: auto;
+        }
+        #input-container {
+            display: flex;
+            gap: 10px;
+        }
+        #message-input {
+            flex-grow: 1;
+            padding: 8px;
+        }
+        button {
+            padding: 8px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .message {
+            margin: 10px 0;
+            padding: 8px;
+            border-radius: 5px;
+            white-space: pre-wrap;
+        }
+        .user-message {
+            background-color: #e3f2fd;
+            margin-left: 20%;
+        }
+        .ai-message {
+            background-color: #f5f5f5;
+            margin-right: 20%;
+        }
+        /* 添加Markdown样式 */
+        .bold {
+            font-weight: bold;
+        }
+        .heading {
+            margin-top: 10px;
+            margin-bottom: 5px;
+            padding-left: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>AI聊天界面</h1>
+    <div id="chat-container"></div>
+    <div id="input-container">
+        <input type="text" id="message-input" placeholder="输入消息...">
+        <button onclick="sendMessage()">发送</button>
+    </div>
+ 
+    <script>
+        function formatMessage(message) {
+            // 处理粗体
+            message = message.replace(/\*\*(.*?)\*\*/g, '<span class="bold">$1</span>');
+            
+            // 处理标题和缩进
+            message = message.split('\n').map(line => {
+                if (line.startsWith('##')) {
+                    return '\n<div class="heading">' + line.substring(2).trim() + '</div>';
+                }
+                return line;
+            }).join('\n');
+ 
+            return message;
+        }
+ 
+        function addMessage(message, isUser) {
+            const chatContainer = document.getElementById('chat-container');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${isUser ? 'user-message' : 'ai-message'}`;
+            messageDiv.innerHTML = isUser ? message : formatMessage(message);
+            chatContainer.appendChild(messageDiv);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+ 
+        async function sendMessage() {
+            const input = document.getElementById('message-input');
+            const message = input.value.trim();
+            
+            if (!message) return;
+            
+            addMessage(message, true);
+            input.value = '';
+ 
+            try {
+                const response = await fetch('/page/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ message: message })
+                });
+ 
+                // 创建 EventSource 来处理流式响应
+                const messageDiv = document.createElement('div');
+                messageDiv.className = 'message ai-message';
+                document.getElementById('chat-container').appendChild(messageDiv);
+                
+                const reader = new ReadableStreamDefaultReader(response.body);
+                const decoder = new TextDecoder();
+                let buffer = '';
+ 
+                while (true) {
+                    const {value, done} = await reader.read();
+                    if (done) break;
+                    
+                    buffer += decoder.decode(value, {stream: true});
+                    const lines = buffer.split('\n');
+                    buffer = lines.pop() || '';
+ 
+                    for (const line of lines) {
+                        if (line.startsWith('data: ')) {
+                            try {
+                                const data = JSON.parse(line.slice(6));
+                                messageDiv.innerHTML = formatMessage(messageDiv.innerHTML + data.content);
+                                const chatContainer = document.getElementById('chat-container');
+                                chatContainer.scrollTop = chatContainer.scrollHeight;
+                            } catch (e) {
+                                console.error('解析错误:', e);
+                            }
+                        }
+                    }
+                }
+            } catch (error) {
+                addMessage('发生错误: ' + error, false);
+            }
+        }
+ 
+        document.getElementById('message-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+    </script>
+</body>
+</html>

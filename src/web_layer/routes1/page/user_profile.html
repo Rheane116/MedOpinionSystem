@@ -1,0 +1,77 @@
+{% extends 'base_page.html' %}
+{% block title %}
+    用户资料设置
+{% endblock %}
+
+
+{% block content %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12">
+            </div>
+            <div class="col-lg-12 mb-3 d-flex justify-content-between">
+                <h4 class="font-weight-bold d-flex align-items-center" style="margin-top: 20px;">用户资料设置</h4>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <form id="user_profile" class="" method="POST" action="/page/user_profile">
+                    <div class="row">
+                        <div style="margin-top: 10px; width:45%; margin-left:20px">
+                            <label for="username" class="form-label font-weight-bold text-muted text-uppercase">用户名</label>
+                            <input type="text" class="form-control" id="username" name="username" value="{{user.username}}">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div style="margin-top: 10px; width:45%; margin-left:20px">
+                            <label for="phone" class="form-label font-weight-bold text-muted text-uppercase">手机号</label>
+                            <input type="text" class="form-control" id="phone" name="phone" value="{{user.phone}}">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div style="margin-top:20px; margin-left:20px; width:45%">
+                            <label for="email" class="form-label font-weight-bold text-muted text-uppercase">邮箱</label>
+                            <input type="text" class="form-control" id="email" name="email"  value="{{user.email}}">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div style="margin-top:20px; margin-left:20px; width:45%">
+                            <label for="agency" class="form-label font-weight-bold text-muted text-uppercase" >机构</label>
+                            <input type="text" class="form-control" id="agency" name="agency" value="{{user.agency}}">        
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top:40px">
+                        <div style="margin-left:20px; width:15%">
+                            <button type="submit" class="btn btn-primary btn-block mt-2" >提交</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+<script>
+// 处理表单提交
+document.getElementById('user_profile').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(this);
+    
+    try {
+        const response = await fetch(this.action, {
+            method: 'POST',
+            body: formData
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+            window.location.href = result.redirect;
+        } else {
+            showErrorToast(result.message);
+        }
+    } catch (error) {
+        showErrorToast('网络错误，请稍后再试');
+    }
+});
+</script>
+{% endblock %}

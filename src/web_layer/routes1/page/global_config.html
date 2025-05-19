@@ -1,0 +1,95 @@
+{% extends 'base_page.html' %}
+{% block title %}
+    舆情分析-新建任务
+{% endblock %}
+
+
+{% block content %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12">
+            </div>
+            <div class="col-lg-12 mb-3 d-flex justify-content-between">
+                <h4 class="font-weight-bold d-flex align-items-center" style="margin-top: 20px;">全局任务配置</h4>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <form id="global_config" class="" method="POST" action="/page/global_config">
+                    <div class="row">
+                        <div style="margin-top: 10px; width:45%; margin-left:20px">
+                            <label for="agency_name" class="form-label font-weight-bold text-muted text-uppercase">医疗机构全称</label>
+                            <input type="text" class="form-control" id="agency_name" name="agency_name" placeholder="请输入医疗机构全称" value="{{config.agency_name}}">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div style="margin-top: 10px; width:45%;margin-left:20px">
+                            <label for="other_names" class="form-label font-weight-bold text-muted text-uppercase">医疗机构简称/别名</label>
+                            <input type="text" class="form-control" id="other_names" name="other_names" placeholder="请输入医疗机构简称/别名，若有多个请用///进行分隔，不允许空格" value="{{config.other_names}}">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div style="margin-top:20px; margin-left:20px; width:45%">
+                            <label for="max_note" class="form-label font-weight-bold text-muted text-uppercase">每个平台最大爬取帖子数</label>
+                            <input type="text" class="form-control" id="max_note" name="max_note" placeholder="输入每个平台最大爬取帖子数" value="{{config.max_note}}">
+                        </div>
+
+                        <div style="margin-top:20px; margin-left:20px; width:45%">
+                            <label for="max_comment" class="form-label font-weight-bold text-muted text-uppercase">每个帖子最大爬取评论数</label>
+                            <input type="text" class="form-control" id="max_comment" name="max_comment" placeholder="输入每个帖子最大爬取评论数" value="{{config.max_comment}}"">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div style="margin-top: 10px; width:45%; margin-left:20px">
+                            <label for="if_level" class="form-label font-weight-bold text-muted text-uppercase">是否爬取二级评论</label>
+                            <select class="form-control" id="if_level" name="if_level">
+                                <option value="" selected disabled>请选择</option>
+                                <option {% if config.if_level == 0 %}selected{% endif %}>否</option>
+                                <option {% if config.if_level == 1 %}selected{% endif %}>是</option>
+                                </select>
+                        </div>
+                    </div>  
+                    <div class="row">
+                        <div style="margin-top:20px; margin-left:20px; width:45%">
+                            <label for="gpu" class="form-label font-weight-bold text-muted text-uppercase" >运行GPU</label>
+                            <input type="text" class="form-control" id="gpu" name="gpu" placeholder="将gpu编号用英文逗号,进行分隔" value="{{config.gpu}}">        
+                        </div>
+                        <div style="margin-top:20px; margin-left:20px; width:45%">
+                            <label for="bsz" class="form-label font-weight-bold text-muted text-uppercase" >运行批量大小</label>
+                            <input type="text" class="form-control" id="bsz" name="bsz" placeholder="请输入运行批量大小" value="{{config.batch_size}}">        
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top:40px">
+                        <div style="margin-left:20px; width:15%">
+                            <button type="submit" class="btn btn-primary btn-block mt-2" >提交</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+<script>
+// 处理表单提交
+document.getElementById('global_config').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(this);
+    
+    try {
+        const response = await fetch(this.action, {
+            method: 'POST',
+            body: formData
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+            window.location.href = result.redirect;
+        } else {
+            showErrorToast(result.message);
+        }
+    } catch (error) {
+        showErrorToast('网络错误，请稍后再试');
+    }
+});
+</script>
+{% endblock %}

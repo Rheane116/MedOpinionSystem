@@ -1,0 +1,259 @@
+{% extends 'base_page.html' %}
+{% block title %}
+    导入分析-任务报告
+{% endblock %}
+
+{% block content %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-full">
+                <div class="d-flex flex-wrap justify-content-between align-items-center my-schedule mb-4">
+                    <div class="d-flex align-items-center position-relative">
+                        <h4 class="font-weight-bold mb-0">导入任务{{ task_id }}报告</h4>
+                    </div>
+                    <a href="/page/manual/home" class="btn btn-primary btn-sm">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" viewbox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd"></path>
+                        </svg>
+                        <span class="ml-2">返回</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 导航按钮 -->
+        <div class="row mb-0">
+            <div class="col-full">
+                <div class="card rounded-pill shadow-sm" style="height: 40px;">  <!-- 设置固定高度 -->
+                    <div class="card-body p-0 h-100">  <!-- 高度100%继承 -->
+                        <div class="d-flex h-100">  <!-- 高度100%继承 -->
+                            <button id="hotspotBtn" class="btn btn-primary active flex-grow-1 rounded-0 h-100 d-flex align-items-center justify-content-center" 
+                                    style="border:none; margin-left:-15px; padding: 0;">
+                                <span class="d-block">热点分布</span>
+                            </button>
+                            <button id="sentimentBtn" class="btn btn-outline-primary flex-grow-1 rounded-0 h-100 d-flex align-items-center justify-content-center" 
+                                    style="border-left:none !important; border-top:none; border-right:none; border-bottom:none; padding: 0;">
+                                <span class="d-block">情感极性</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 热点识别卡片 -->
+        <div id="hotspotCard" class="row report-section">
+            <div class="col-full">
+                <div class="card rounded-pill shadow-sm">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="card rounded-pill">
+                                    <div class="card-body">
+                                        <h5 class="font-weight-bold mb-3" style="color: rgb(114, 114, 114);">热点词云图（总体）</h5>
+                                        <div id="wordcloud-overall" style="width:100%; height:400px; min-height:400px;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="card rounded-pill">
+                                    <div class="card-body">
+                                        <h5 class="font-weight-bold mb-3" style="color: rgb(114, 114, 114);">热点分布图（总体）</h5>
+                                        <div id="pie-overall" style="width:100%; height:400px; min-height:400px;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 添加水平分界线 -->
+                        <hr class="my-4">  <!-- my-4 是上下边距 -->
+
+                        <!-- 数据切换按钮组 -->
+                        <div class="d-flex justify-content-center mb-4">
+                            <div class="btn-group" role="group">
+                                <button type="button" class="btn btn-outline-primary category-btn active" data-category="医疗机构">医疗机构</button>
+                                <button type="button" class="btn btn-outline-primary category-btn" data-category="部门/科室">部门/科室</button>
+                                <button type="button" class="btn btn-outline-primary category-btn" data-category="医生">医生</button>
+                                <button type="button" class="btn btn-outline-primary category-btn" data-category="护士">护士</button>
+                                <button type="button" class="btn btn-outline-primary category-btn" data-category="管理人员">管理人员</button>
+                            </div>
+                        </div>
+                        <!-- 图表展示区域 -->
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="card rounded-pill">
+                                    <div class="card-body">
+                                        <h5 id="pie_text" class="font-weight-bold mb-3" style="color: rgb(114, 114, 114); ">热点分布图（医疗机构）</h5>
+                                        <div id="pie-category" style="width:100%; height:400px; min-height:400px;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="card rounded-pill">
+                                    <div class="card-body">
+                                        <h5 id="cloud_text" class="font-weight-bold mb-3" style="color: rgb(114, 114, 114);">热点词云图（医疗机构）</h5>
+                                        <div id="wordcloud-category" style="width:100%; height:400px; min-height:400px;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 情感极性卡片 -->
+        <div id="sentimentCard" class="row report-section" style="display: none;">
+            <div class="col-full">
+                <div class="card rounded-pill shadow-sm">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-3" style="height:150px; margin-top:10px; margin-left:20px; margin-bottom:0px;">
+                                <div class="card bg-primary">
+                                    <div class="card-body">
+                                        <div class="d-flex align-items-center">
+                                            <div class="fit-icon-2 text-info text-center">
+                                                <div id="circle-progress-01" class="circle-progress-01 circle-progress circle-progress-light" data-min-value="0" data-max-value="100" data-value="0" data-type="percent"></div>
+                                            </div>
+                                            <div class="ml-3">
+                                                <small class="mb-0">总体情感正向率</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-4">
+                                <div class="card rounded-pill" style="height:620px">
+                                    <div class="card-body" >
+                                        <h5 class="font-weight-bold mb-3" style="color: rgb(114, 114, 114);">情感极性表（总体）</h5>
+                                        <div id="table-overall" style="width:100%; height:500px; min-height:500px;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-8">
+                                <div class="card rounded-pill" style="height:620px">
+                                    <div class="card-body">
+                                        <h5 class="font-weight-bold mb-3" style="color: rgb(114, 114, 114);">情感极性柱状图（总体）</h5>
+                                        <div id="bar-overall" style="width:100%; height:500px; min-height:500px;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 添加水平分界线 -->
+                        <hr class="my-4">  <!-- my-4 是上下边距 -->
+
+                        <!-- 数据切换按钮组 -->
+                        <div class="d-flex justify-content-center mb-4">
+                            <div class="btn-group" role="group">
+                                <button type="button" class="btn btn-outline-primary category-btn active" data-category="医疗机构">医疗机构</button>
+                                <button type="button" class="btn btn-outline-primary category-btn" data-category="部门/科室">部门/科室</button>
+                                <button type="button" class="btn btn-outline-primary category-btn" data-category="医生">医生</button>
+                                <button type="button" class="btn btn-outline-primary category-btn" data-category="护士">护士</button>
+                                <button type="button" class="btn btn-outline-primary category-btn" data-category="管理人员">管理人员</button>
+                            </div>
+                        </div>
+                        <div class="row">
+                                <div class="card bg-primary" style="margin-left:20px">
+                                    <div class="card-body">
+                                        <div class="d-flex align-items-center">
+                                            <div class="ml-3">
+                                                <small id="circleText" class="mb-0">情感正向率</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                        </div>
+                        <!-- 其他情感极性表格保持不变 -->
+                        <div class="row">
+                            <div class="col-lg-8">
+                                <div class="card rounded-pill" style="height:620px">
+                                    <div class="card-body">
+                                        <h5 id="bar_text" class="font-weight-bold mb-3" style="color: rgb(114, 114, 114);">情感极性柱状图（分主体、主题）</h5>
+                                        <div id="bar-category" style="width:100%; height:500px; min-height:500px;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="card rounded-pill" style="height:620px">
+                                    <div class="card-body" >
+                                        <h5 id="table_text" class="font-weight-bold mb-3" style="color: rgb(114, 114, 114);">情感极性表（分主体、主题）</h5>
+                                        <div id="table-category" style="width:100%; height:500px; min-height:500px;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<style>
+    /* 新增样式 */
+    .report-section {
+        transition: all 0.3s ease;
+    }
+    
+    .btn-group .btn {
+        min-width: 120px;
+        padding: 10px 20px;
+        font-weight: bold;
+    }
+    
+    .btn-group .btn.active {
+        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }  
+</style>
+
+<script src="/static/sys_js/card_change.js"></script>
+<script src="/static/sys_js/category_change.js"></script>
+{% endblock %}
+
+{% block echarts %}
+<!-- 保持原有的echarts脚本 -->
+<script src="/static/js/echarts.min.js"></script>
+<script src="/static/js/echarts-wordcloud.min.js"></script>
+<script>
+    var outputJson = '{{ output|safe }}';
+    var output = JSON.parse(outputJson);
+    console.log(output)
+</script>
+<script src="/static/sys_js/wordcloud_pie.js"></script>
+<script src="/static/sys_js/table.js"></script>
+<script src="/static/sys_js/bar.js"></script>
+<script>
+    document.getElementById("circle-progress-01").setAttribute("data-value", output['所有主体']['所有主题'][2]*100);
+
+    function render_sentiment_text(head){
+        data = output[head]["所有主题"];
+        var percentage = (data[0]+data[1]) == 0 ? "\\" : Math.round((data[0] / (data[0] + data[1]) * 100)).toString();
+        console.log(percentage)
+        document.getElementById("circleText").textContent = head + "情感正向率: " + percentage +"%";
+        document.getElementById("table_text").textContent = "情感极性表" + "(" + head + ")";
+        document.getElementById("bar_text").textContent = "情感极性柱状图" + "(" + head + ")";
+    }
+</script>
+
+<script>
+    // 修改初始化逻辑，确保在卡片显示后再初始化图表
+    document.getElementById('sentimentBtn').addEventListener('click', function() {
+        setTimeout(() => {
+            var outputJson = '{{ output|safe }}';
+            var output = JSON.parse(outputJson);
+            render_table(output['所有主体'],'table-overall'); 
+            render_bar(output['所有主体'],'bar-overall');
+            render_table(output['医疗机构'], 'table-category');
+            render_bar(output['医疗机构'], 'bar-category');
+            render_sentiment_text("医疗机构");
+        }, 50);
+    });
+</script>
+
+{% endblock %}

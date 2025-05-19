@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+      <title>{% block title %}
+        医疗机构舆情自动监测系统-登录
+      {% endblock %}</title>
+
+      <link rel="stylesheet" href="/static/css/backend-plugin.min.css">
+      <link rel="stylesheet" href="/static/css/backend.css">
+      <link rel="stylesheet" href="/static/css/window.css">
+      <!-- Font Awesome for eye icon -->
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+  </head>
+  <body class=" ">
+    <!-- loader Start -->
+    <div id="loading">
+          <div id="loading-center">
+          </div>
+    </div>
+    <!-- loader END -->
+
+    <!-- 错误提示容器 -->
+    <div id="errorToast" class="error-toast" style="display: none;">
+        <div>
+            <i class="fas fa-exclamation-circle"></i>
+            <span id="errorMessage"></span>
+        </div>
+        <div class="error-toast-close" onclick="hideErrorToast()">
+            <i class="fas fa-times"></i>
+        </div>
+    </div>
+
+    <div class="wrapper">
+    <section class="login-content" style="background-image: url(https://img1.qunarzz.com/travel/d6/1804/cf/d4209bdf94e00b5.jpg);background-repeat: no-repeat;background-size: cover; background-position: center;">
+         <div class="container h-100">
+            <div class="row align-items-center justify-content-center h-100">
+               <div class="col-md-5">
+                  <div class="card p-3">
+                      {% block content %}
+                        <div class="card-body">
+                        <div class="auth-logo">
+                            <svg t="1744438189063" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="3408" width="70" height="70"><path d="M940.533 543.118a31.46 31.46 0 0 0-24.337-20.127 30.97 30.97 0 0 0-29.23 11.457 32.53 32.53 0 0 0-4.892 31.585 162.702 162.702 0 0 1-14.792 144.293c-27.306 42.906-72.988 69.882-122.993 72.568a30.89 30.89 0 0 0-3.778 0.455H277.618a31.039 31.039 0 0 0-4.551-0.785c-80.692-7.555-141.54-75.936-141.54-159.062 0-88.155 69.973-159.869 155.557-159.88l5.791 0.318a30.367 30.367 0 0 0 23.62-9.33 32.427 32.427 0 0 0 9.103-23.995l-0.319-5.553c-0.057-0.864-0.136-1.752-0.136-2.628 0-110.455 87.984-200.374 196.119-200.374 72.931-0.09 139.878 41.222 173.727 107.202a31.141 31.141 0 0 0 42.291 13.368 31.858 31.858 0 0 0 15.303-18.83 32.586 32.586 0 0 0-2.207-24.371c-44.647-86.995-132.938-141.46-229.114-141.278-135.168 0-247.171 106.143-257.89 242.893-109.579 12.368-194.48 108.771-194.48 222.458 0 112.515 81.84 207.724 190.521 221.867a30.083 30.083 0 0 0 10.752 1.945h475.74a29.97 29.97 0 0 0 7.293-0.898c113.254-8.795 201.91-106.565 201.91-222.925a227.112 227.112 0 0 0-14.575-80.373z" fill="#8E9BAE" p-id="3409"></path><path d="M626.324 594.67l-126.02-128.807a26.908 26.908 0 0 0-10.98-8.624 26.169 26.169 0 0 0-29.161 5.893l-166.48 170.11a27.716 27.716 0 0 0 0 38.604 26.328 26.328 0 0 0 37.786 0l147.422-150.63L607.46 652.572a26.635 26.635 0 0 0 18.864 7.965 26.26 26.26 0 0 0 18.898-7.965l184.9-188.87a67.015 67.015 0 0 0 26.784 5.688 70.144 70.144 0 0 0 64.853-44.191 72.818 72.818 0 0 0-15.166-78.097 69.074 69.074 0 0 0-76.436-15.576c-26.17 11.082-43.315 37.194-43.327 66.184a70.85 70.85 0 0 0 5.575 27.307z m230.639-213.992a17.067 17.067 0 1 1-16.703 17.066 16.885 16.885 0 0 1 16.703-17.066z" fill="#F2EEED" p-id="3410"></path></svg>
+                        </div>
+                        <h3 class="mb-3 font-weight-bold text-center">欢迎登录</h3>
+                        <p class="text-center text-secondary mb-4">医疗机构舆情自动监测系统 - 基于信息抽取</p>
+                        <div class="mb-5">
+                            <p class="line-around text-secondary mb-0"><span class="line-around-1">输入您的用户名和密码</span></p>
+                        </div>
+                        <form id="loginForm" method="POST" action="/user/login">
+                           <div class="row">
+                              <div class="col-lg-12">
+                                 <div class="form-group">
+                                    <label class="text-secondary">用户名</label>
+                                    <input class="form-control" name="username" type="text" placeholder="请输入您的用户名" required>
+                                 </div>
+                              </div>
+                              <div class="col-lg-12 mt-2">
+                                 <div class="form-group">
+                                     <div class="d-flex justify-content-between align-items-center">
+                                         <label class="text-secondary">密码</label>
+                                     </div>
+                                     <div class="password-input-group">
+                                        <input class="form-control" name="password" id="password" type="password" placeholder="请输入您的密码" required>
+                                        <i class="fas fa-eye password-toggle" id="togglePassword"></i>
+                                     </div>
+                                 </div>
+                              </div>
+                           </div>
+                           <button type="submit" class="btn btn-primary btn-block mt-2">登录</button>
+                           <div class="col-lg-12 mt-3">
+                                <p class="mb-0 text-center">还没有账号？<a href="/user/register">注册</a></p>
+                           </div>
+                        </form>
+                     </div>
+                      {% endblock %}
+                  </div>
+               </div>
+            </div>
+         </div>
+      </section>
+      </div>
+
+    <!-- Backend Bundle JavaScript -->
+    <script src="/static/js/backend-bundle.min.js"></script>
+    <!-- Chart Custom JavaScript -->
+    <script src="/static/js/customizer.js"></script>
+
+    <script src="/static/js/sidebar.js"></script>
+
+    <!-- Flextree Javascript-->
+    <script src="/static/js/flex-tree.min.js"></script>
+    <script src="/static/js/tree.js"></script>
+
+    <!-- Table Treeview JavaScript -->
+    <script src="/static/js/table-treeview.js"></script>
+
+    <!-- SweetAlert JavaScript -->
+    <script src="/static/js/sweetalert.js"></script>
+
+    <!-- Vectoe Map JavaScript -->
+    <script src="/static/js/vector-map-custom.js"></script>
+
+    <!-- Chart Custom JavaScript -->
+    <script src="/static/js/chart-custom.js"></script>
+    <script src="/static/js/01.js"></script>
+    <script src="/static/js/02.js"></script>
+
+    <!-- slider JavaScript -->
+    <script src="/static/js/slider.js"></script>
+
+    <!-- Emoji picker -->
+    <script src="/static/js/index.js" type="module"></script>
+
+    <!-- app JavaScript -->
+    <script src="/static/js/app.js"></script>
+ 
+{% block script %}
+    <!-- Password toggle script -->
+    <script>
+        const togglePassword = document.querySelector('#togglePassword');
+        const password = document.querySelector('#password');
+        
+        togglePassword.addEventListener('click', function (e) {
+            // toggle the type attribute
+            const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+            password.setAttribute('type', type);
+            // toggle the eye icon
+            this.classList.toggle('fa-eye');
+            this.classList.toggle('fa-eye-slash');
+        });
+
+        // 显示错误提示
+        function showErrorToast(message) {
+            const toast = document.getElementById('errorToast');
+            const errorMessage = document.getElementById('errorMessage');
+            
+            errorMessage.textContent = message;
+            toast.style.display = 'flex';
+            
+            // 3秒后自动隐藏
+            setTimeout(() => {
+                toast.style.display = 'none';
+            }, 3000);
+        }
+
+        // 隐藏错误提示
+        function hideErrorToast() {
+            document.getElementById('errorToast').style.display = 'none';
+        }
+
+        // 处理表单提交
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            
+            try {
+                const response = await fetch(this.action, {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    window.location.href = result.redirect;
+                } else {
+                    showErrorToast(result.message);
+                }
+            } catch (error) {
+                showErrorToast('网络错误，请稍后再试');
+            }
+        });
+    </script>
+{% endblock %}
+
+  </body>
+</html>

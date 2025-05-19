@@ -1,0 +1,129 @@
+{% extends 'base_page.html' %}
+{% block title %}
+    数据管理
+{% endblock %}
+
+
+{% block content %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-full">
+                <div class="d-flex flex-wrap align-items-center justify-content-between my-schedule mb-4">
+                   <div class="d-flex align-items-center justify-content-between">
+                        <h4 class="font-weight-bold">舆情数据管理</h4>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="card card-block card-stretch">
+                            <div class="card-body p-0">
+                                <div class="d-flex justify-content-between align-items-center p-3">
+                                    <h5 class="font-weight-bold">任务列表</h5>
+                                </div>
+
+                                <div class="table-responsive">
+                                    <table class="table data-table mb-0">
+                                        <thead class="table-color-heading">
+                                            <tr class="text-light">
+                                                <th scope="col">
+                                                    <label class="text-muted m-0">任务编号</label>
+                                                </th>
+                                                <th scope="col">
+                                                    <label class="text-muted mb-0">用户编号</label>
+                                                </th>
+                                                <th scope="col">
+                                                    <label class="text-muted mb-0">机构</label>
+                                                </th>
+                                                <th scope="col">
+                                                    <label class="text-muted mb-0">平台</label>
+                                                </th>
+                                                <th scope="col">
+                                                    <label class="text-muted mb-0">创建时间</label>
+                                                </th>
+                                                </th>
+                                                <th scope="col">
+                                                    <label class="text-muted mb-0">任务状态</label>
+                                                </th>                                                                 
+                                                <th scope="col">
+                                                    <label class="text-muted mb-0">任务数据量</label>
+                                                </th>
+
+                                                <th scope="col">
+                                                    <label class="text-muted mb-0">原始舆情数据量</label>
+                                                </th>
+     
+                                                <th scope="col">
+                                                    <span class="text-muted">删除操作</span>
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                {%set status_config = {
+                                                    0:{'text':'待启动', 'fill':'#E79805', 'text_class':'warning'},
+                                                    1:{'text':'爬取中', 'fill':'#BEBEBE', 'text_class':'light'},
+                                                    2:{'text':'分析中', 'fill':'#BEBEBE', 'text_class':'light'},
+                                                    3:{'text':'已完成', 'fill':'#3CB371', 'text_class':'success'},
+                                                    4:{'text':'爬取失败', 'fill':'#CD5C5C', 'text_class':'danger'},
+                                                    5:{'text':'分析失败', 'fill':'#CD5C5C', 'text_class':'danger'},
+                                                }%}
+                                                {% for task in tasks %}
+                                                    <tr>
+                                                        <td>{{ task.task_id }}</td>
+                                                        <td>{{ task.user_id }}</td>
+                                                        <td>{{ task.agency_name }}</td>
+                                                        <td>{{ task.platform }}</td>
+                                                        <td>{{ task.create_time }}</td>
+                                                        <td>
+                                                            <p class="mb-0 text-{{ status_config.get(task.status).text_class }} font-weight-bold d-flex justify-content-start align-items-center">
+                                                                <small><svg class="mr-2" xmlns="http://www.w3.org/2000/svg" width="18" viewbox="0 0 24 24" fill="none">
+                                                                <circle cx="12" cy="12" r="8" fill="{{ status_config.get(task.status).fill }}" ></circle></svg>
+                                                                </small>{{ status_config.get(task.status).text }}
+                                                            </p>
+                                                        </td>
+                                                        <td>{{ task.data_num }}</td>
+                                                        <td>{{ task.raw_data_num }}</td>
+                                                        <td>
+                                                            <div class="d-flex justify-content-end align-items-center">
+                                                                {% if task.status in [0, 3,4,5] and task.platform != "-"%}
+                                                                <form method="POST" action="/page/task/delete">
+                                                                        <input type="hidden" name="task_id" value="{{task.task_id}}">
+
+                                                                        <input type="hidden" name="from" value="manage">
+                                                                        
+                                                                            <button type="submit" class="btn btn-danger mt-2" style="color:white"><i class="ri-settings-4-fill pr-0">任务数据</i></button>        
+                                                                </form>
+                                                                <form method="POST" action="/page/task/delete_raw">
+                                                                    <input type="hidden" name="task_id1" value="{{task.task_id}}">
+                                                                    
+                                                                        <button type="submit" class="btn btn-danger mt-2" style="color:white"><i class="ri-settings-4-fill pr-0">原始数据</i></button>        
+                                                                 </form>
+                                                                {% endif %}
+                                                                {% if task.status in [0, 3,5] and task.platform == "-"%}
+                                                                <form method="POST" action="/page/manual/delete">
+                                                                        <input type="hidden" name="task_id" value="{{task.task_id}}">
+
+                                                                        <input type="hidden" name="from" value="manage">
+                                                                        
+                                                                            <button type="submit" class="btn btn-danger mt-2" style="color:white"><i class="ri-settings-4-fill pr-0">任务数据</i></button>        
+                                                                </form>
+                                                                {% endif %}
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+
+

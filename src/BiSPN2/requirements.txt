@@ -1,0 +1,4 @@
+#torch==1.13.0+cu117
+transformers==3.4.0
+tqdm
+scipy

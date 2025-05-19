@@ -1,0 +1,323 @@
+{% extends 'base_page.html' %}
+{% block title %}
+    导入分析
+{% endblock %}
+
+
+
+{% block content %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-full">
+                <div class="d-flex flex-wrap align-items-center justify-content-between my-schedule mb-4">
+                   <div class="d-flex align-items-center justify-content-between">
+                        <h4 class="font-weight-bold">导入分析任务</h4>
+                    </div>
+                    <div class="create-workform">
+                        <button id="newTaskBtn" class="btn btn-primary position-relative d-flex align-items-center justify-content-between">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="mr-2" width="20" fill="none" viewbox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                            </svg>
+                            新建任务
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="card card-block card-stretch">
+                            <div class="card-body p-0">
+                                <div class="d-flex justify-content-between align-items-center p-3">
+                                    <h5 class="font-weight-bold">任务列表</h5>
+                                </div>
+
+                                <div class="table-responsive">
+                                    <table class="table data-table mb-0">
+                                        <thead class="table-color-heading">
+                                            <tr class="text-light">
+                                                <th scope="col">
+                                                    <label class="text-muted m-0">任务编号</label>
+                                                </th>        
+                                                <th scope="col">
+                                                    <label class="text-muted m-0">医疗机构全称</label>
+                                                </th> 
+                                           
+                                                <th scope="col">
+                                                    <label class="text-muted mb-0">创建时间</label>
+                                                </th>
+                                                <th scope="col">
+                                                    <label class="text-muted mb-0">任务状态</label>
+                                                </th>
+                                                <th scope="col">
+                                                    <span class="text-muted">操作</span>
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                {%set status_config = {
+                                                    0:{'text':'待启动', 'fill':'#E79805', 'text_class':'warning'},
+                                                    2:{'text':'分析中', 'fill':'#BEBEBE', 'text_class':'light'},
+                                                    3:{'text':'已完成', 'fill':'#3CB371', 'text_class':'success'},
+                                                    5:{'text':'分析失败', 'fill':'#CD5C5C', 'text_class':'danger'},
+                                                }%}
+                                                {% for task in tasks %}
+                                                    <tr>
+                                                        <td>{{ task.task_id }}</td>
+                                                        <td>{{ task.agency_name }}</td>
+                                                        <td>{{ task.create_time}}</td>
+                                                        <td>
+                                                            <p class="mb-0 text-{{ status_config.get(task.status).text_class }} font-weight-bold d-flex justify-content-start align-items-center">
+                                                                <small><svg class="mr-2" xmlns="http://www.w3.org/2000/svg" width="18" viewbox="0 0 24 24" fill="none">
+                                                                <circle cx="12" cy="12" r="8" fill="{{ status_config.get(task.status).fill }}" ></circle></svg>
+                                                                </small>{{ status_config.get(task.status).text }}
+                                                            </p>
+                                                        </td>
+                                                        <td>
+                                                            <div class="d-flex justify-content-end align-items-center">
+                                                                <form method="POST" action="/page/manual/start">
+                                                                    {% if task.status in [0, 5]  %}
+                                                                        <input type="hidden" name="task_id" value="{{task.task_id}}">
+                                                                        {% if task.status == 0 %}
+                                                                            <button type="submit" class="btn btn-warning mt-2"><i class="ri-settings-4-fill pr-0" style="color:white">启动</i></button>
+                                                                        {% else %}
+                                                                            <button type="submit" class="btn btn-danger mt-2"><i class="ri-settings-4-fill pr-0" style="color:white">重启分析</i></button>
+                                                                        {% endif %}
+                                                                    {% endif %}
+                                                                </form>
+
+                                                                {% if task.status == 3 %}
+                                                                    <a class="" data-toggle="tooltip" data-placement="top" title="" data-original-title="View" href="/page/get_task_data_manual?task_id={{ task.task_id }}">
+                                                                        <button class="btn btn-success mt-2"><i class="ri-settings-4-fill pr-0" style="color:white">下载</i></button>
+                                                                    </a>
+                                                                {% endif %}
+
+                                                                {% if task.status in [0, 5] %}
+                                                                    <a class="" data-toggle="tooltip" data-placement="top" title="" data-original-title="View" href="/page/manual/update?task_id={{ task.task_id }}">
+                                                                        <button class="btn btn-primary mt-2"><i class="ri-settings-4-fill pr-0" style="color:white">修改</i></button>
+                                                                    </a>                                                               
+                                                                {% endif %}
+                                                                {% if task.status == 3 %}
+                                                                    <a class="" data-toggle="tooltip" data-placement="top" title="" data-original-title="View" href="/page/manual/report?param={{ task.task_id }}">
+                                                                        <button class="btn btn-success mt-2"><i class="" style="color:white">浏览</i></button>
+                                                                    </a>
+                                                                {% endif %}
+                                                                {% if task.status in [0, 3, 5] %}
+                                                                    <form method="POST" action="/page/manual/delete">
+                                                                        <input type="hidden" name="task_id" value="{{task.task_id}}">
+                                                                        <input type="hidden" name="from" value="manual">
+                                                                        <button type="submit" class="btn btn-light mt-2"><i class="ri-time-fill pr-0" style="color:white">删除</i></button>
+                                                                    </form>   
+                                                                {% endif %}  
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                {% endfor %}
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<!-- 新增任务弹窗 -->
+<div id="taskModal" class="modal-overlay">
+    <div class="modal-container">
+        <div class="modal-header">
+            <h4 class="font-weight-bold">新建任务</h4>
+            <button class="close-modal">&times;</button>
+        </div>
+        <div class="modal-body">
+            <form id="manualForm" class="task-form" method="POST" action="/page/manual/create" enctype="multipart/form-data">
+                <div class="form-row">
+                    <button type="button" class="btn btn-primary" id="importGlobalConfigBtn">导入全局配置</button>
+                </div>
+                <div class="form-row" >
+                    <label for="input_format" class="form-label font-weight-bold text-muted text-uppercase">*导入格式</label>
+                    <select class="form-control" id="input_format" name="input_format" required>
+                        <option value="" selected disabled>请选择</option>
+                        <option>txt</option>
+                        <option>xlsx</option>
+                         </select>
+                </div> 
+                <div class="form-row" id="sep_row" style="display: none;">
+                    <div class="form-group">
+                        <label for="sep" class="form-label font-weight-bold text-muted text-uppercase">分割符</label>
+                        <input type="text" class="form-control_window" id="sep" name="sep" placeholder="若不输入,则按行分割且不允许空行">
+                    </div>
+                </div>
+                <div class="form-row" id="xlsx_row" style="display: none;">
+                    <div class="form-group">
+                        <label for="col" class="form-label font-weight-bold text-muted text-uppercase">文本所在列数</label>
+                        <input type="text" class="form-control_window" id="col" name="col" placeholder="请输入>=1的整数；若不输入，默认为舆情任务数据的表格格式">
+                    </div>
+                    <div class="form-group">
+                        <label for="row" class="form-label font-weight-bold text-muted text-uppercase">文本开始行数</label>
+                        <input type="text" class="form-control_window" id="row" name="row" placeholder="请输入>=1的整数；若不输入，默认为舆情任务数据的表格格式">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <div class="custom-file">
+                            <input type="file" class="custom-file-input" id="upload_data" name="upload_data" required>
+                            <label class="custom-file-label font-weight-bold text-muted" for="upload_data">* 请导入txt文件或xlsx文件</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="agency_name" class="form-label font-weight-bold text-muted text-uppercase">* 医疗机构全称</label>
+                        <input type="text" class="form-control_window" id="agency_name" name="agency_name" placeholder="请输入医疗机构全称" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="other_names" class="form-label font-weight-bold text-muted text-uppercase">医疗机构简称/别名</label>
+                        <input type="text" class="form-control_window" id="other_names" name="other_names" placeholder="请输入医疗机构简称/别名，若有多个请用///进行分隔">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="gpu" class="form-label font-weight-bold text-muted text-uppercase">运行GPU</label>
+                        <input type="text" class="form-control_window" id="gpu" name="gpu" placeholder="将gpu编号用英文逗号,进行分隔">        
+                    </div>
+                    <div class="form-group">
+                        <label for="batch_size" class="form-label font-weight-bold text-muted text-uppercase">推理批量大小</label>
+                        <input type="text" class="form-control_window" id="batch_size" name="batch_size" placeholder="请输入推理批量大小">        
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary cancel-btn">取消</button>
+                    <button type="submit" class="btn btn-primary">提交</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- 新增错误提示容器 -->
+<div id="errorToast" class="error-toast" style="display: none;">
+    <div>
+        <i class="fas fa-exclamation-circle"></i>
+        <span id="errorMessage"></span>
+    </div>
+    <div class="error-toast-close" onclick="hideErrorToast()">
+        <i class="fas fa-times"></i>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // 弹窗控制逻辑
+    const modal = document.getElementById('taskModal');
+    const newTaskBtn = document.getElementById('newTaskBtn');
+    const closeModal = document.querySelector('.close-modal');
+    const cancelBtn = document.querySelector('.cancel-btn');
+
+    newTaskBtn.addEventListener('click', () => {
+        modal.style.display = 'flex';
+    });
+
+    closeModal.addEventListener('click', () => {
+        modal.style.display = 'none';
+    });
+
+    cancelBtn.addEventListener('click', () => {
+        modal.style.display = 'none';
+    });
+
+</script>
+
+
+<!-- error script -->
+<script>
+
+    // 显示错误提示
+    function showErrorToast(message) {
+        const toast = document.getElementById('errorToast');
+        const errorMessage = document.getElementById('errorMessage');
+        
+        errorMessage.textContent = message;
+        toast.style.display = 'flex';
+        
+        // 3秒后自动隐藏
+        setTimeout(() => {
+            toast.style.display = 'none';
+        }, 3000);
+    }
+
+    // 隐藏错误提示
+    function hideErrorToast() {
+        document.getElementById('errorToast').style.display = 'none';
+    }
+
+    // 处理表单提交
+    document.getElementById('manualForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        const formData = new FormData(this);
+        
+        try {
+            const response = await fetch(this.action, {
+                method: 'POST',
+                body: formData
+            });
+            
+            const result = await response.json();
+            
+            if (result.success) {
+                window.location.href = result.redirect;
+            } else {
+                showErrorToast(result.message);
+            }
+        } catch (error) {
+            showErrorToast('网络错误，请稍后再试');
+        }
+    });
+
+document.getElementById('importGlobalConfigBtn').addEventListener('click', async function () {
+try {
+    const response = await fetch('/page/global_config_import'); 
+    const data = await response.json();
+
+    if (data.success) {
+        // 自动填入各个字段
+        document.getElementById('agency_name').value = data.config.agency_name || '';
+        document.getElementById('other_names').value = data.config.other_names || '';
+        document.getElementById('batch_size').value = data.config.batch_size || '';
+        document.getElementById('gpu').value = data.config.gpu || '';
+    } else {
+        showErrorToast(data.message || '导入失败');
+    }
+} catch (error) {
+    showErrorToast('请求失败，请稍后重试');
+}
+});
+
+document.getElementById("input_format").addEventListener("change", function () {
+    const sepRow = document.getElementById("sep_row");
+    if (this.value === "txt") {
+        sepRow.style.display = "block";
+    } else {
+        sepRow.style.display = "none";
+        sep.value=""
+    }
+});
+document.getElementById("input_format").addEventListener("change", function () {
+    const xlsxRow = document.getElementById("xlsx_row");
+    if (this.value === "xlsx") {
+        xlsxRow.style.display = "block";
+    } else {
+        xlsxRow.style.display = "none";
+        row.value=""
+        col.value=""
+    }
+});
+</script>
+{% endblock %}
+

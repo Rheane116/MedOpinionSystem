@@ -1,0 +1,370 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>{% block title %}首页{% endblock %}</title>
+    <link rel="stylesheet" href="/static/css/backend-plugin.min.css">
+    <link rel="stylesheet" href="/static/css/backend.css">
+    <link rel="stylesheet" href="/static/css/self.css">
+    <link rel="stylesheet" href="/static/css/window.css">
+    <link rel="stylesheet" href="/static/css/layout.css">
+    <style>
+      .wrapper {
+        display: flex;
+        min-height: 100vh;
+      }
+      .iq-sidebar {
+        width: 260px;
+        background: #fff;
+        position: fixed;
+        left: 0;
+        top: 0;
+        height: 100vh;
+        z-index: 1000;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
+      }
+      .content-page {
+        flex: 1;
+        margin-left: 260px;
+        padding: 0px 30px;
+        transition: all 0.3s ease;
+        margin-top: 20px;
+      }
+      .iq-sidebar-menu {
+        padding: 15px 0;
+      }
+      .iq-sidebar-menu .side-menu {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+      .iq-sidebar-menu .side-menu li {
+        padding: 8px 20px;
+        margin: 5px 0;
+      }
+      .iq-sidebar-menu .side-menu li a {
+        display: flex;
+        align-items: center;
+        color: #4a5568;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+        font-size: 14px;
+        font-weight: 400;
+        letter-spacing: 0.3px;
+        text-shadow: 0 0 1px rgba(0,0,0,0.1);
+      }
+      .iq-sidebar-menu .side-menu li a:hover {
+        color: #3378FF;
+        text-shadow: 0 0 1px rgba(51,120,255,0.2);
+      }
+      .iq-sidebar-menu .side-menu li.active a {
+        color: #3378FF;
+        background: rgba(51,120,255,0.1);
+        border-radius: 5px;
+        text-shadow: 0 0 1px rgba(51,120,255,0.3);
+      }
+      .iq-sidebar-menu .side-menu li a i {
+        margin-right: 10px;
+        width: 20px;
+        text-align: center;
+      }
+      .iq-sidebar-menu .side-menu li.submenu {
+        padding-left: 40px;
+      }
+      .iq-sidebar-menu .side-menu li.parent {
+        font-weight: 500;
+        margin-top: 15px;
+        cursor: pointer;
+        position: relative;
+      }
+      .iq-sidebar-menu .side-menu li.parent:first-child {
+        margin-top: 0;
+      }
+      .iq-sidebar-menu .side-menu li.parent::after {
+        content: '';
+        position: absolute;
+        right: 20px;
+        top: 50%;
+        transform: translateY(-50%) rotate(180deg);
+        width: 0;
+        height: 0;
+        border-left: 5px solid transparent;
+        border-right: 5px solid transparent;
+        border-top: 5px solid #4a5568;
+        transition: transform 0.3s ease;
+      }
+      .iq-sidebar-menu .side-menu li.parent.collapsed::after {
+        transform: translateY(-50%) rotate(0deg);
+      }
+      .iq-sidebar-menu .side-menu li.parent.collapsed + li.submenu {
+        display: none;
+      }
+      .iq-sidebar-logo {
+        padding: 20px;
+        border-bottom: 1px solid #eee;
+        display: flex;
+        align-items: center;
+      }
+      .iq-sidebar-logo a {
+        display: flex;
+        align-items: center;
+        text-decoration: none;
+        color: #333 !important;
+      }
+      .iq-sidebar-logo span {
+        font-size: 16px;
+        margin-left: 10px;
+        color: #333 !important;
+        line-height: 1.4;
+        word-break: break-word;
+        white-space: normal;
+      }
+      .user-menu {
+        position: absolute;
+        bottom: 20px;
+        left: 0;
+        right: 0;
+        padding: 0 20px;
+      }
+      .user-menu .logout-btn {
+        display: block;
+        width: 100%;
+        padding: 8px 18px;
+        text-align: left;
+        color: #0c2556;
+        text-decoration: none;
+        border: none;
+        background: none;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-size: 14px;
+      }
+      .user-menu .logout-btn:hover {
+        color: #3378FF;
+        background: rgba(51,120,255,0.1);
+        border-radius: 5px;
+      }
+      @media (max-width: 768px) {
+        .iq-sidebar {
+          transform: translateX(-100%);
+        }
+        .content-page {
+          margin-left: 0;
+        }
+        .iq-sidebar.active {
+          transform: translateX(0);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- loader Start -->
+    <div id="loading">
+      <div id="loading-center"></div>
+    </div>
+    <!-- loader END -->
+    
+    <!-- 错误提示容器 -->
+    <div id="errorToast" class="error-toast" style="display: none;">
+      <div>
+          <i class="fas fa-exclamation-circle"></i>
+          <span id="errorMessage"></span>
+      </div>
+      <div class="error-toast-close" onclick="hideErrorToast()">
+          <i class="fas fa-times"></i>
+      </div>
+    </div>
+
+    <!-- Wrapper Start -->
+    <div class="wrapper">
+      <div class="iq-sidebar">
+        <div class="iq-sidebar-logo d-flex align-items-center">
+          <a href="/page/home" class="header-logo" style="color: #979494f6 !important;">
+            <svg t="1744438189063" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="3408" width="40" height="40"><path d="M940.533 543.118a31.46 31.46 0 0 0-24.337-20.127 30.97 30.97 0 0 0-29.23 11.457 32.53 32.53 0 0 0-4.892 31.585 162.702 162.702 0 0 1-14.792 144.293c-27.306 42.906-72.988 69.882-122.993 72.568a30.89 30.89 0 0 0-3.778 0.455H277.618a31.039 31.039 0 0 0-4.551-0.785c-80.692-7.555-141.54-75.936-141.54-159.062 0-88.155 69.973-159.869 155.557-159.88l5.791 0.318a30.367 30.367 0 0 0 23.62-9.33 32.427 32.427 0 0 0 9.103-23.995l-0.319-5.553c-0.057-0.864-0.136-1.752-0.136-2.628 0-110.455 87.984-200.374 196.119-200.374 72.931-0.09 139.878 41.222 173.727 107.202a31.141 31.141 0 0 0 42.291 13.368 31.858 31.858 0 0 0 15.303-18.83 32.586 32.586 0 0 0-2.207-24.371c-44.647-86.995-132.938-141.46-229.114-141.278-135.168 0-247.171 106.143-257.89 242.893-109.579 12.368-194.48 108.771-194.48 222.458 0 112.515 81.84 207.724 190.521 221.867a30.083 30.083 0 0 0 10.752 1.945h475.74a29.97 29.97 0 0 0 7.293-0.898c113.254-8.795 201.91-106.565 201.91-222.925a227.112 227.112 0 0 0-14.575-80.373z" fill="#8E9BAE" p-id="3409"></path><path d="M626.324 594.67l-126.02-128.807a26.908 26.908 0 0 0-10.98-8.624 26.169 26.169 0 0 0-29.161 5.893l-166.48 170.11a27.716 27.716 0 0 0 0 38.604 26.328 26.328 0 0 0 37.786 0l147.422-150.63L607.46 652.572a26.635 26.635 0 0 0 18.864 7.965 26.26 26.26 0 0 0 18.898-7.965l184.9-188.87a67.015 67.015 0 0 0 26.784 5.688 70.144 70.144 0 0 0 64.853-44.191 72.818 72.818 0 0 0-15.166-78.097 69.074 69.074 0 0 0-76.436-15.576c-26.17 11.082-43.315 37.194-43.327 66.184a70.85 70.85 0 0 0 5.575 27.307z m230.639-213.992a17.067 17.067 0 1 1-16.703 17.066 16.885 16.885 0 0 1 16.703-17.066z" fill="#F2EEED" p-id="3410"></path></svg>
+            <span style="color: #979494f6 !important;">医疗机构舆情自动监测系统</span>
+          </a>
+        </div>
+        <div class="data-scrollbar" data-scroll="1">
+          <nav class="iq-sidebar-menu">
+            <ul id="iq-sidebar-toggle" class="side-menu">
+              <li class="{% if request.path == '/page/home' %}active{% endif %}">
+                <a href="/page/home">
+                  <i>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="#75809C" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+                    </svg>
+                  </i>
+                  <span>首页</span>
+                </a>
+              </li>
+              <li class="{% if request.path == '/page/task/home' or request.path == '/page/task/update' or request.path == '/page/task/report'%}active{% endif %}">
+                <a href="/page/task/home">
+                  <i>
+                    <svg t="1734879644809" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="5975" width="16" height="16"><path d="M928 538.656h-128v-177.344l86.08-82.176a32 32 0 1 0-44.192-46.304L750.624 320H273.376L182.08 232.864a31.968 31.968 0 1 0-44.16 46.272L224 361.344v177.344H96a32 32 0 0 0 0 64h128V640c0 52.96 14.304 102.592 39.232 145.216L137.92 904.864a32 32 0 1 0 44.192 46.304l119.712-114.272a287.104 287.104 0 0 0 178.208 89.344V544a32 32 0 0 1 64 0v382.24a287.424 287.424 0 0 0 178.208-89.344l119.712 114.272a32.032 32.032 0 0 0 44.192-46.304l-125.344-119.648A287.04 287.04 0 0 0 800 640v-37.344h128a32 32 0 0 0 0-64z" p-id="5976" fill="#333"></path><path d="M672 240a160 160 0 0 0-320 0v21.344h320V240z" p-id="5977" fill="#333"></path></svg>
+                  </i>
+                  <span>舆情爬取分析</span>
+                </a>
+              </li>
+              <li class="parent">
+                <div>
+                  <i>
+            
+                  </i>
+                  <span>辅助分析</span>
+                </div>
+              </li>
+
+              <li class="submenu {% if request.path == '/page/manual/home' or request.path == '/page/manual/update'%}active{% endif %}">
+                <a href="/page/manual/home">
+                  <i>
+                    <svg t="1734879758449" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="7437" width="16" height="16"><path d="M544.53830029 514.58000029V962H480.3083V514.58000029l-108.51000029 86.78999971a32.13 32.13 0 1 1-40.14-50.19000029l160.71000029-128.54999971a32.15999971 32.15999971 0 0 1 40.14 0l160.71000029 128.54999971a32.13 32.13 0 0 1-40.14 50.19000029l-108.51000029-86.78999971zM383.8283 737v64.28999971H319.53830029a257.13 257.13 0 0 1-92.61-497.09999971 289.37999971 289.37999971 0 0 1 570.96 0 257.13 257.13 0 0 1-92.61 497.09999971h-64.29000058V737h64.29000058a192.87 192.87 0 0 0 54.23999942-378l-21.06-6.14999971-1.94999942-21.84000029a225 225 0 0 0-448.2 0l-1.95000029 21.84000029-21.06 6.14999971a192.87 192.87 0 0 0 54.24000029 378h64.28999971z" p-id="7438" fill="#333"></path></svg>
+                  </i>
+                  <span>评论导入分析</span>
+                </a>
+              </li>
+              <li class="submenu {% if request.path == '/page/deepseek/home'%}active{% endif %}">
+                <a href="/page/deepseek/home">
+                  <i>
+                    <svg t="1743575573383" class="icon" viewBox="0 0 1391 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4111" width="16" height="16"><path d="M1382.12555807 63.45623157c-14.73053987-7.36694577-21.0903122 6.67482826-29.69569586 13.81050954-2.93270133 2.3025895-5.43639037 5.2956207-7.94007938 8.05738747-21.52435201 23.478369-46.67184703 38.90270222-79.56167359 37.06096578-48.0527304-2.76176674-89.0854117 12.66089063-125.34197943 50.18270947-7.71049077-46.26964801-33.3205147-73.89234293-72.3086842-91.61758983-20.43003543-9.20700638-41.0326813-18.41568859-55.33420887-38.44352498-9.95442626-14.27136261-12.66089063-30.15487307-17.66659288-45.80711909-3.16564161-9.43827083-6.33128325-19.10613027-16.97615117-20.71827809-11.59673901-1.84173644-16.11477489 8.05738745-20.66129987 16.34436353-18.12744594 33.83834596-25.17765995 71.1305762-24.45872917 108.88198365 1.55516963 84.94276158 36.71742076 152.6194535 106.52409176 200.73083796 7.94175522 5.52353348 9.98459118 11.04874282 7.48090216 19.10445442-4.74762451 16.57395213-10.44544426 32.68872704-15.42265737 49.2626792-3.16731744 10.58956558-7.91326613 12.89047925-19.04915208 8.28697605-38.29940365-16.34436352-71.39032974-40.51485003-100.65366161-69.74801697-49.63471329-49.03309056-94.5234779-103.12886155-150.48947443-145.4837722a661.8118183 661.8118183 0 0 0-39.90987567-27.85395942c-57.11729129-56.62794912 7.48090217-103.12718572 22.44438231-108.65239505 15.62375691-5.75479794 5.4380662-25.5513699-45.11835322-25.32178128s-96.79757829 17.49565827-155.72811695 40.51485003c-8.63052108 3.45220843-17.69675779 5.98438656-26.96074236 8.05738749-53.52096153-10.35997695-109.05459409-12.66089063-167.09359148-5.9860624-109.2556936 12.43130203-196.52953378 65.14618963-260.69536329 155.15163164-77.05798457 108.19154197-95.21559542 231.11697547-72.97231263 359.33467803 23.30743442 135.12547108 90.89698322 247.00048593 194.71628647 334.47374981 107.67371071 90.69588368 231.66329585 135.12547108 373.11837431 126.60890637 85.91977008-5.06603207 181.56605365-16.80521659 289.46935296-110.03495422 27.22049591 13.8121854 55.79338609 19.33739472 103.15735067 23.48004484 36.51464541 3.45220843 71.64840745-1.84173644 98.84041425-7.59653439 42.6146642-9.20700638 39.6501221-49.4922678 24.25595382-56.85753775-124.90961545-59.39139169-97.48802001-35.22090515-122.40592638-54.78621268 63.47538778-76.65578551 159.12167135-156.30460223 196.52953378-414.35215512 2.96286625-20.48701364 0.45917725-33.37749289 0-49.95144506-0.23126445-10.12871251 2.01267102-14.04344985 13.37982144-15.19306875 31.27767874-3.68347287 61.66381626-12.43130203 89.54626476-28.08354804 80.91239203-45.11835324 113.57095414-119.24196063 121.28312075-208.0977837 1.15129475-13.58092095-0.22958861-27.62269495-14.30152755-34.75837626M676.89467748 863.15361188c-121.02504304-97.14279917-179.75448214-129.13940867-204.01043596-127.75852533-22.67397092 1.38088338-18.588299 27.85395941-13.61108589 45.11835324 5.20847758 17.03480522 12.02742715 28.77398972 21.55116528 43.73746986 6.56254768 9.89912389 11.10907268 24.63133958-6.58768512 35.68008242-38.98984534 24.63133958-106.75368041-8.28697606-109.9176462-9.89744807-78.89972099-47.42094273-144.88047363-110.03495424-191.35122116-195.66648169-44.88708879-82.41058346-70.92780085-170.80555349-75.24473718-265.18491008-1.15129475-22.78960315 5.4380662-30.84699058 27.62437077-34.99131655a267.60145597 267.60145597 0 0 1 88.65304773-2.30091365c123.55889699 18.41736442 228.75740777 74.81404907 316.92111337 164.13072521 50.32683081 50.87147534 88.39497004 111.64375041 127.64289309 171.0351421 41.69463388 63.07151293 86.58339852 123.15334628 143.70068976 172.41434965 20.17028189 17.26439385 36.25489187 30.38613755 51.67754928 40.05399698-46.4707475 5.2956207-124.01639839 6.44523963-177.04801777-36.37052409m58.03732158-380.97298644c0-10.12871251 7.94343105-18.18609998 17.92634639-18.18609998q3.39523024 0.05865402 6.10001881 1.15129477a18.04197865 18.04197865 0 0 1 11.56824991 17.03480521 17.95483551 17.95483551 0 0 1-17.89785732 18.18609997 17.753736 17.753736 0 0 1-17.69675779-18.18609997m180.21533522 94.3793566c-11.53976081 4.83476764-23.10633489 8.97909357-34.24222086 9.43827083-17.20741563 0.92170613-36.02530325-6.21397518-46.21099397-14.96180432-15.88351045-13.58259677-27.22217175-21.17913115-31.96979625-44.88876463-2.04283596-10.12871251-0.92170613-25.78095852 0.89321705-34.75837629 4.08567191-19.33739472-0.46085308-31.7670209-13.8121854-43.04702813-10.87613241-9.20868221-24.71848271-11.74086034-39.90987566-11.74086036-5.66933063 0-10.87613241-2.5305023-14.73221569-4.60350318a15.10592564 15.10592564 0 0 1-6.56087184-21.17745534c1.5819829-3.22261982 9.29414949-11.05041866 11.10739683-12.43130199 20.62945915-11.97044896 44.42623571-8.05571162 66.40976495 0.92170611 20.40154635 8.51656469 35.79571462 24.17048652 58.03899743 46.269648 22.67397092 26.70266465 26.75964283 34.06961042 39.6501221 54.09577099 10.21585563 15.65224602 19.51000513 31.7670209 25.84128837 50.18103364 3.88289657 11.51127171-1.12280565 20.9478667-14.50262706 26.70266467" fill="#333" p-id="4112"></path></svg>
+                  </i>
+                  <span>大模型对话分析</span>
+                </a>
+              </li>
+              <li class="parent">
+                <div>
+                  <i>
+                  
+                  </i>
+                  <span>系统设置</span>
+                </div>
+              </li>
+              <li class="submenu {% if request.path == '/page/global_config'%}active{% endif %}">
+                <a href="/page/global_config?username={{ username }}">
+                  <i>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="#75809C" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                    </svg>
+                  </i>
+                  <span>全局配置</span>
+                </a>
+              </li>
+              <li class="submenu {% if request.path == '/page/user_profile'%}active{% endif %}">
+                <a href="/page/user_profile?username={{ username }}">
+                  <i>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="#75809C" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                    </svg>
+                  </i>
+                  <span>我的资料</span>
+                </a>
+              </li>
+              {% if user_role == 1 %}
+              <li class="submenu">
+                <a href="/page/data_manage">
+                  <i>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="#75809C" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4"></path>
+                    </svg>
+                  </i>
+                  <span>数据管理</span>
+                </a>
+              </li>
+              {% endif %}
+            </ul>
+          </nav>
+        </div>
+        <div class="user-menu">
+          <form action="/user/logout" method="POST" style="display:inline;">
+            <button type="submit" class="logout-btn">退出登录</button>
+          </form>
+        </div>
+      </div>
+      
+      <div class="content-page">
+        {% block content %}
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-md-12 mb-4 mt-1">
+              <div class="d-flex flex-wrap justify-content-between align-items-center">
+                <h4 class="font-weight-bold">首页</h4>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endblock %}
+      </div>
+    </div>
+    <!-- Wrapper End-->
+
+    {% block echarts %}{% endblock %}
+    {% block scripts %}{% endblock %}
+    <!-- 先加载jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- 然后加载Bootstrap -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- 再加载其他依赖 -->
+    <script src="/static/js/echarts.min.js"></script>
+    <script src="/static/js/backend-bundle.min.js"></script>
+    <script src="/static/js/customizer.js"></script>
+    <script src="/static/js/sidebar.js"></script>
+    <script src="/static/js/flex-tree.min.js"></script>
+    <script src="/static/js/tree.js"></script>
+    <script src="/static/js/table-treeview.js"></script>
+    <script src="/static/js/sweetalert.js"></script>
+    <script src="/static/js/vector-map-custom.js"></script>
+    <script src="/static/js/chart-custom.js"></script>
+    <script src="/static/js/01.js"></script>
+    <script src="/static/js/02.js"></script>
+    <script src="/static/js/slider.js"></script>
+    <script src="/static/js/index.js" type="module"></script>
+    <script src="/static/js/app.js"></script>
+    <script src="/static/js/delete.js"></script>
+    <!-- 最后加载DataTables -->
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap5.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css">
+    
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        const parentItems = document.querySelectorAll('.iq-sidebar-menu .side-menu li.parent');
+        parentItems.forEach(item => {
+          // 初始状态为展开
+          item.classList.add('expanded');
+          
+          item.addEventListener('click', function() {
+            this.classList.toggle('collapsed');
+            let nextItem = this.nextElementSibling;
+            while (nextItem && nextItem.classList.contains('submenu')) {
+              nextItem.style.display = nextItem.style.display === 'none' ? 'block' : 'none';
+              nextItem = nextItem.nextElementSibling;
+            }
+          });
+        });
+      });
+
+      // 显示错误提示
+      function showErrorToast(message) {
+          const toast = document.getElementById('errorToast');
+          const errorMessage = document.getElementById('errorMessage');
+          
+          errorMessage.textContent = message;
+          toast.style.display = 'flex';
+          
+          // 3秒后自动隐藏
+          setTimeout(() => {
+              toast.style.display = 'none';
+          }, 5000);
+      }
+
+      // 隐藏错误提示
+      function hideErrorToast() {
+          document.getElementById('errorToast').style.display = 'none';
+      }
+      
+    </script>
+    {% block extra_js %}{% endblock %}
+  </body>
+</html>

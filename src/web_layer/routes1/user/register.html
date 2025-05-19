@@ -1,0 +1,202 @@
+{% extends 'base_login.html' %}
+
+{% block title %}
+    医疗机构舆情自动监测系统-注册
+{% endblock %}
+
+{% block content %}
+<div class="card-body">
+    <div class="auth-logo">
+        <svg t="1744438189063" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="3408" width="70" height="70"><path d="M940.533 543.118a31.46 31.46 0 0 0-24.337-20.127 30.97 30.97 0 0 0-29.23 11.457 32.53 32.53 0 0 0-4.892 31.585 162.702 162.702 0 0 1-14.792 144.293c-27.306 42.906-72.988 69.882-122.993 72.568a30.89 30.89 0 0 0-3.778 0.455H277.618a31.039 31.039 0 0 0-4.551-0.785c-80.692-7.555-141.54-75.936-141.54-159.062 0-88.155 69.973-159.869 155.557-159.88l5.791 0.318a30.367 30.367 0 0 0 23.62-9.33 32.427 32.427 0 0 0 9.103-23.995l-0.319-5.553c-0.057-0.864-0.136-1.752-0.136-2.628 0-110.455 87.984-200.374 196.119-200.374 72.931-0.09 139.878 41.222 173.727 107.202a31.141 31.141 0 0 0 42.291 13.368 31.858 31.858 0 0 0 15.303-18.83 32.586 32.586 0 0 0-2.207-24.371c-44.647-86.995-132.938-141.46-229.114-141.278-135.168 0-247.171 106.143-257.89 242.893-109.579 12.368-194.48 108.771-194.48 222.458 0 112.515 81.84 207.724 190.521 221.867a30.083 30.083 0 0 0 10.752 1.945h475.74a29.97 29.97 0 0 0 7.293-0.898c113.254-8.795 201.91-106.565 201.91-222.925a227.112 227.112 0 0 0-14.575-80.373z" fill="#8E9BAE" p-id="3409"></path><path d="M626.324 594.67l-126.02-128.807a26.908 26.908 0 0 0-10.98-8.624 26.169 26.169 0 0 0-29.161 5.893l-166.48 170.11a27.716 27.716 0 0 0 0 38.604 26.328 26.328 0 0 0 37.786 0l147.422-150.63L607.46 652.572a26.635 26.635 0 0 0 18.864 7.965 26.26 26.26 0 0 0 18.898-7.965l184.9-188.87a67.015 67.015 0 0 0 26.784 5.688 70.144 70.144 0 0 0 64.853-44.191 72.818 72.818 0 0 0-15.166-78.097 69.074 69.074 0 0 0-76.436-15.576c-26.17 11.082-43.315 37.194-43.327 66.184a70.85 70.85 0 0 0 5.575 27.307z m230.639-213.992a17.067 17.067 0 1 1-16.703 17.066 16.885 16.885 0 0 1 16.703-17.066z" fill="#F2EEED" p-id="3410"></path></svg>
+    </div>
+    <h3 class="mb-2 font-weight-bold text-center">注册</h3>
+    <p class="text-center text-secondary mb-3">医疗机构舆情自动监测系统 - 基于信息抽取</p>
+    <div class="mb-3">
+        <p class="line-around text-secondary mb-0"><span class="line-around-1">请填写注册信息</span></p>
+    </div>
+    <form id="registerForm" method="POST" action="/user/register">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="form-group mb-2">
+                    <label class="text-secondary mb-1">用户名</label>
+                    <input class="form-control" name="username" type="text" placeholder="请输入您的用户名" required>
+                </div>
+            </div>
+            <div class="col-lg-12">
+                <div class="form-group mb-2">
+                    <div class="d-flex justify-content-between align-items-center mb-1">
+                        <label class="text-secondary">密码</label>
+                    </div>
+                    <div class="password-input-group">
+                        <input class="form-control" name="password" id="password" type="password" placeholder="请输入您的密码" required>
+                        <i class="fas fa-eye password-toggle" id="togglePassword1"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-12">
+                <div class="form-group mb-2">
+                    <div class="d-flex justify-content-between align-items-center mb-1">
+                        <label class="text-secondary">确认密码</label>
+                    </div>
+                    <div class="password-input-group">
+                        <input class="form-control" name="check_password" id="check_password" type="password" placeholder="请再次输入您的密码" required>
+                        <i class="fas fa-eye password-toggle" id="togglePassword2"></i>
+                    </div>
+                </div>
+            </div>
+            <!--<div class="col-lg-12">
+                <div class="form-group mb-3">
+                    <label class="text-secondary mb-1">角色</label>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="role" id="role_user" value="0" checked>
+                            <label class="form-check-label text-secondary" for="role_user">
+                                普通用户
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="role" id="role_admin" value="1">
+                            <label class="form-check-label text-secondary" for="role_admin">
+                                管理员
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>-->
+        </div>
+        <button type="submit" class="btn btn-primary btn-block mt-2">注册</button>
+        <div class="col-lg-12 mt-3">
+            <p class="mb-0 text-center">已有账号？<a href="/user/login">登录</a></p>
+        </div>
+    </form>
+</div>
+
+<style>
+    .card-body {
+        padding: 1.5rem;
+    }
+    .auth-logo {
+        text-align: center;
+        margin-bottom: 1rem;
+    }
+    .auth-logo img {
+        max-height: 60px;
+    }
+    .form-group {
+        margin-bottom: 0.5rem;
+    }
+    .form-control {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.9rem;
+    }
+    .password-input-group {
+        position: relative;
+    }
+    .password-toggle {
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        cursor: pointer;
+        color: #718096;
+    }
+    .btn-primary {
+        padding: 0.5rem;
+        font-size: 0.9rem;
+    }
+    .form-check {
+        margin-bottom: 0;
+    }
+    .form-check-input {
+        margin-top: 0.2rem;
+    }
+    .form-check-label {
+        font-size: 0.9rem;
+    }
+</style>
+{% endblock %}
+
+{% block script %}
+    <!-- Password toggle script -->
+    <script>
+        const togglePassword1 = document.querySelector('#togglePassword1');
+        const password = document.querySelector('#password');
+        const togglePassword2 = document.querySelector('#togglePassword2');
+        const check_password = document.querySelector('#check_password');
+        
+        togglePassword1.addEventListener('click', function (e) {
+            // toggle the type attribute
+            const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+            password.setAttribute('type', type);
+            // toggle the eye icon
+            this.classList.toggle('fa-eye');
+            this.classList.toggle('fa-eye-slash');
+        });
+
+        togglePassword2.addEventListener('click', function (e) {
+            // toggle the type attribute
+            const type = check_password.getAttribute('type') === 'password' ? 'text' : 'password';
+            check_password.setAttribute('type', type);
+            // toggle the eye icon
+            this.classList.toggle('fa-eye');
+            this.classList.toggle('fa-eye-slash');
+        });
+
+        // 显示错误提示
+        function showErrorToast(message) {
+            const toast = document.getElementById('errorToast');
+            const errorMessage = document.getElementById('errorMessage');
+            
+            errorMessage.textContent = message;
+            toast.style.display = 'flex';
+            
+            // 3秒后自动隐藏
+            setTimeout(() => {
+                toast.style.display = 'none';
+            }, 3000);
+        }
+
+        // 隐藏错误提示
+        function hideErrorToast() {
+            document.getElementById('errorToast').style.display = 'none';
+        }
+
+        // 处理表单提交
+        document.getElementById('registerForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            // 检查两次密码是否一致
+            const passwordValue = document.getElementById('password').value;
+            const checkPasswordValue = document.getElementById('check_password').value;
+            
+            if (passwordValue !== checkPasswordValue) {
+                showErrorToast('两次输入的密码不一致');
+                return;
+            }
+            
+            const formData = new FormData(this);
+            
+            try {
+                const response = await fetch(this.action, {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                if (response.redirected) {
+                    window.location.href = response.url;
+                    return;
+                }
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    window.location.href = result.redirect || '/user/login';
+                } else {
+                    showErrorToast(result.message || '注册失败');
+                }
+            } catch (error) {
+                showErrorToast('网络错误，请稍后再试');
+            }
+        });
+    </script>
+{% endblock %}

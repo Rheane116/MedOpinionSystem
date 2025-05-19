@@ -1,0 +1,173 @@
+/* 页面布局样式 */
+body {
+background-color: #f8f9fa;
+color: #333;
+}
+
+/* 主内容容器 - 居中布局 */
+.content-page_ {
+    max-width: 1400px;
+    margin: 60px auto 0; /* 上边距60px，左右自动居中 */
+    padding: 20px;
+    width: calc(100% - 80px); /* 减去左右边距 */
+  }
+  
+  /* 行样式 - 居中布局 */
+  .row_ {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 -15px; /* 负边距抵消列的padding */
+    justify-content: center; /* 水平居中 */
+  }
+  
+  /* 列宽度系统 - 响应式调整 */
+  .col-full {
+    width: 100%;
+    max-width: 1600px; /* 限制最大宽度 */
+    padding: 0 10px;
+    margin: 0 auto; /* 水平居中 */
+  }
+  
+  /* 响应式调整 */
+  @media (max-width: 1600px) {
+    .content-page_ {
+      width: calc(100% - 60px); /* 屏幕较小时减少边距 */
+    }
+  }
+  
+  @media (max-width: 1200px) {
+    .content-page_ {
+      width: calc(100% - 40px);
+      padding: 15px;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .content-page_ {
+      width: calc(100% - 30px);
+      margin-top: 50px;
+      padding: 10px;
+    }
+    
+    .row_ {
+      margin: 0 -10px; /* 移动设备上减少负边距 */
+    }
+    
+    .col-full {
+      padding: 0 10px;
+    }
+  }
+
+.col-half {
+width: 50%;
+padding: 0 15px;
+}
+
+.col-third {
+width: 33.3333%;
+padding: 0 15px;
+}
+
+.col-quarter {
+width: 25%;
+padding: 0 15px;
+}
+
+.col-fifth {
+width: 20%;
+padding: 0 15px;
+}
+
+.col-sixth {
+width: 16.6666%;
+padding: 0 15px;
+}
+
+
+
+/* 卡片样式 */
+.card {
+background: #fff;
+border-radius: 10px;
+box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+margin-bottom: 30px;
+border: none;
+transition: all 0.3s ease;
+overflow: hidden;
+}
+
+.card:hover {
+box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+transform: translateY(-5px);
+}
+
+.card-body {
+padding: 25px;
+}
+
+.card-header {
+padding: 20px 25px;
+background: transparent;
+border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.card-title {
+font-size: 1.2rem;
+font-weight: 600;
+margin-bottom: 0;
+color: #2c3e50;
+}
+
+/* 图表卡片特殊样式 */
+.card-chart {
+height: 350px;
+}
+
+.card-chart .card-body {
+height: calc(100% - 60px);
+display: flex;
+flex-direction: column;
+}
+
+/* 表格卡片样式 */
+.card-table {
+overflow-x: auto;
+}
+
+/* 小卡片样式 */
+.card-sm {
+height: 100%;
+}
+
+.card-sm .card-body {
+padding: 15px;
+}
+
+
+
+
+/* 按钮样式调整 */
+.btn-group-style .btn {
+    flex: 1;
+    text-align: center;
+    padding: 12px 0;
+    border-radius: 0;
+}
+
+/* 去除卡片与下方内容的间隙 */
+.no-gap-card {
+    margin-bottom: 0;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+/* 按钮激活状态 */
+.btn-group-style .btn.active {
+    font-weight: bold;
+    box-shadow: none;
+}
+
+/* 去除轮廓按钮的边框 */
+.btn-outline-primary {
+    border-color: transparent;
+}
