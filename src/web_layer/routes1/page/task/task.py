@@ -34,7 +34,8 @@ def task_create():
             '知乎' : request.form.get("cookies_zhihu"),
             '哔哩哔哩' : request.form.get("cookies_bili"),
             '微博' : request.form.get("cookies_wb"),
-            '小红书' : request.form.get("cookies_xhs")
+            '小红书' : request.form.get("cookies_xhs"),
+            '抖音' : request.form.get("cookies_dy")
         }
         agency_name = request.form.get("agency_name")
         other_names = request.form.get("other_names")
@@ -77,7 +78,8 @@ def task_update():
             '知乎' : request.form.get("cookies_zhihu"),
             '哔哩哔哩' : request.form.get("cookies_bili"),
             '微博' : request.form.get("cookies_wb"),
-            '小红书' : request.form.get("cookies_xhs")
+            '小红书' : request.form.get("cookies_xhs"),
+            '抖音' : request.form.get("cookies_dy"),
         }
         try:
             success = TaskService.update_task(

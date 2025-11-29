@@ -25,6 +25,7 @@
                                 <option {% if '知乎' in task.platform %}selected{% endif %}>知乎</option>
                                 <option {% if '哔哩哔哩' in task.platform %}selected{% endif %}>哔哩哔哩</option>
                                 <option {% if '微博' in task.platform %}selected{% endif %}>微博</option>
+                                <option {% if '抖音' in task.platform %}selected{% endif %}>抖音</option>
                             </select>
                         </div>
                     </div>
@@ -117,7 +118,8 @@ const platformCookiesMap = {
     '小红书': { name: 'cookies_xhs', placeholder: '小红书用户Cookies' },
     '知乎': { name: 'cookies_zhihu', placeholder: '知乎用户Cookies' },
     '哔哩哔哩': { name: 'cookies_bili', placeholder: '哔哩哔哩用户Cookies' },
-    '微博': { name: 'cookies_wb', placeholder: '微博用户Cookies' }
+    '微博': { name: 'cookies_wb', placeholder: '微博用户Cookies' },
+    '抖音': { name: 'cookies_dy', placeholder: '抖音用户Cookies' }
 };
 
 // 监听平台选择变化

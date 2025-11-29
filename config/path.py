@@ -20,8 +20,8 @@ crawler_path = './scripts/crawler.sh'
 bispn_path = './scripts/bispn.sh'
 bispn_m_path = './scripts/bispn_m.sh'
 
-platform_map = {'小红书':'xhs', '知乎':'zhihu', '哔哩哔哩':'bili', '微博':'wb'}
-platform_map_inv = {'xhs':'小红书', 'zhihu':'知乎', 'bili':'哔哩哔哩', 'wb':'微博'}
+platform_map = {'小红书':'xhs', '知乎':'zhihu', '哔哩哔哩':'bili', '微博':'wb', '抖音':'dy'}
+platform_map_inv = {'xhs':'小红书', 'zhihu':'知乎', 'bili':'哔哩哔哩', 'wb':'微博', 'dy':'抖音'}
 head_labels = ["医疗机构", "部门/科室", "医生", "护士", "管理人员"]
 tail_labels = [ "诊疗水平", "医学道德", "服务管理", "收费水平", "医疗监管", "社会口碑", 
                "人员待遇", "资源/团队", "环境/设施"]

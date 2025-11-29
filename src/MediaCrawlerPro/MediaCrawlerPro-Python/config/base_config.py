@@ -17,8 +17,8 @@ from constant import EXCEL_ACCOUNT_SAVE
 from constant import MYSQL_ACCOUNT_SAVE
 
 TASK_ID = -1
-USERNAME = ""
-PLATFORM = "dy"
+USERNAME = "fawn"
+PLATFORM = "bili"
 KEYWORDS = "山东大学齐鲁医院"
 
 #START_TIME = '01/01/2000'

@@ -28,6 +28,8 @@ from media_platform.weibo import WeiboCrawler
 from media_platform.xhs import XiaoHongShuCrawler
 from media_platform.zhihu import ZhihuCrawler
 
+from config.db_config import *
+
 
 
 
@@ -75,6 +77,8 @@ async def main():
     args = await cmd_arg.parse_cmd()
 
     utils.logger.info(f"传入MediaCrawlerPro的参数为：PLATFORM:{config.PLATFORM}，KEYWORDS:{config.KEYWORDS}，CRAWLER_MAX_NOTES_COUNT:{config.CRAWLER_MAX_NOTES_COUNT}，PER_NOTE_MAX_COMMENTS_COUNT:{config.PER_NOTE_MAX_COMMENTS_COUNT}，ENABLE_GET_SUB_COMMENTS:{config.ENABLE_GET_SUB_COMMENTS}")
+
+    utils.logger.info(f"数据库配置信息：{RELATION_DB_NAME}")
 
     # init db
     if config.SAVE_DATA_OPTION == "db":

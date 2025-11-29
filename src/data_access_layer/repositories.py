@@ -277,7 +277,8 @@ platform_2_model = {
   '知乎': [ZhihuComment, ZhihuContent],
   '小红书': [XhsComment, XhsContent],
   '哔哩哔哩': [BilibiliComment, BilibiliContent],
-  '微博': [WeiboComment, WeiboContent]
+  '微博': [WeiboComment, WeiboContent],
+  '抖音': [DouyinComment, DouyinContent]
 }
 
 class CrawlDataRepository:
@@ -310,7 +311,7 @@ class CrawlDataRepository:
 
   @staticmethod
   def get_raw_data_count(task_id):
-    return CrawlDataRepository.get_comments_count("知乎", task_id) + CrawlDataRepository.get_comments_count("小红书", task_id) + CrawlDataRepository.get_comments_count("哔哩哔哩", task_id) + CrawlDataRepository.get_comments_count("微博", task_id) + CrawlDataRepository.get_contents_count("知乎", task_id) + CrawlDataRepository.get_contents_count("小红书", task_id) + CrawlDataRepository.get_contents_count("哔哩哔哩", task_id) + CrawlDataRepository.get_contents_count("微博", task_id)
+    return CrawlDataRepository.get_comments_count("知乎", task_id) + CrawlDataRepository.get_comments_count("小红书", task_id) + CrawlDataRepository.get_comments_count("哔哩哔哩", task_id) + CrawlDataRepository.get_comments_count("微博", task_id) + CrawlDataRepository.get_contents_count("知乎", task_id) + CrawlDataRepository.get_contents_count("小红书", task_id) + CrawlDataRepository.get_contents_count("哔哩哔哩", task_id) + CrawlDataRepository.get_contents_count("微博", task_id) + CrawlDataRepository.get_contents_count("抖音", task_id) + CrawlDataRepository.get_contents_count("抖音", task_id)
   
   @staticmethod
   def delete_raw_data(task_id):
@@ -318,10 +319,12 @@ class CrawlDataRepository:
     CrawlDataRepository.delete_comments("小红书", task_id)
     CrawlDataRepository.delete_comments("哔哩哔哩", task_id)
     CrawlDataRepository.delete_comments("微博", task_id)
+    CrawlDataRepository.delete_comments("抖音", task_id)
     CrawlDataRepository.delete_contents("知乎", task_id)
     CrawlDataRepository.delete_contents("小红书", task_id)
     CrawlDataRepository.delete_contents("哔哩哔哩", task_id)
     CrawlDataRepository.delete_contents("微博", task_id)
+    CrawlDataRepository.delete_contents("抖音", task_id)
    
      
 

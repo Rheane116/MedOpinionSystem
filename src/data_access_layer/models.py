@@ -240,3 +240,21 @@ class WeiboContent(db.Model):
     content = db.Column(db.Text, nullable=False)
     create_time = db.Column(db.Integer, nullable=False)
     task_id = db.Column(db.Integer, nullable=True)
+
+class DouyinContent(db.Model):
+    __bind_key__ = 'crawl'
+    __tablename__ = 'douyin_aweme'
+
+    id = db.Column(db.Integer, primary_key=True)
+    content = db.Column(db.Text, nullable=False, name="desc")
+    create_time = db.Column(db.Integer, nullable=False)
+    task_id = db.Column(db.Integer, nullable=True)
+
+class DouyinComment(db.Model):
+    __bind_key__ = 'crawl'
+    __tablename__ = 'douyin_aweme_comment'
+
+    id = db.Column(db.Integer, primary_key=True)
+    content = db.Column(db.Text, nullable=False)
+    create_time = db.Column(db.Integer, nullable=False)
+    task_id = db.Column(db.Integer, nullable=True)
