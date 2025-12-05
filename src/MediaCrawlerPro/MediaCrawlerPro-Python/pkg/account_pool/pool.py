@@ -83,7 +83,8 @@ class AccountPoolManager:
         Returns:
 
         """
-        account_list: List[Dict] = await cookies_manage_sql.query_platform_accounts_cookies(self._platform_name, config.USERNAME)
+        #account_list: List[Dict] = await cookies_manage_sql.query_platform_accounts_cookies(self._platform_name, config.USERNAME)
+        account_list: List[Dict] = await cookies_manage_sql.query_platform_accounts_cookies(self._platform_name)
         for account_item in account_list:
             account = AccountInfoModel(
                 id=account_item.get("id"),

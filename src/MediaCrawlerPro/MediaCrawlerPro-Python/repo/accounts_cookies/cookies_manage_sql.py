@@ -17,7 +17,8 @@ from pkg.account_pool import AccountInfoModel, AccountStatusEnum
 from var import media_crawler_db_var
 
 
-async def query_platform_accounts_cookies(platform_name: str, username:str, cookie_status: int = 0) -> List[Dict]:
+#async def query_platform_accounts_cookies(platform_name: str, username:str, cookie_status: int = 0) -> List[Dict]:
+async def query_platform_accounts_cookies(platform_name: str, cookie_status: int = 0) -> List[Dict]:
     """
     根据指定平台名称查询账号cookies列表
     Args:
@@ -28,7 +29,7 @@ async def query_platform_accounts_cookies(platform_name: str, username:str, cook
 
     """
     async_db_conn: AsyncMysqlDB = media_crawler_db_var.get()
-    sql: str = f"select * from crawler_cookies_account where platform_name = '{platform_name}' and account_name = '{username}' and status = {cookie_status} order by update_time asc"
+    sql: str = f"select * from crawler_cookies_account where platform_name = '{platform_name}' and status = {cookie_status} order by update_time asc"
     return await async_db_conn.query(sql)
 
 

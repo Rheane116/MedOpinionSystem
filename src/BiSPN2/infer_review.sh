@@ -1,4 +1,4 @@
-python ./+++infer1.py \
+python ./+++infer.py \
     --dataset_name MediaReview \
     --max_len 512 \
     --bert_directory cpt_large \
@@ -12,7 +12,7 @@ python ./+++infer1.py \
     --boundary_ths 0.15 \
     --eval_batch_size 8 \
     --train_file "./+++data/_addtrain/train_tmp.json" \
-    --test_file "./+++data/_addtrain/test.json" \
+    --test_file "./+++data/_addtrain/train_tmp.json" \
     --class_fn "+++data/_addtrain/review_labels.json"\
     --model_ids "2280_v1" \
     --visible_gpus "3" \

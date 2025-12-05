@@ -22,9 +22,9 @@ data_arg = add_argument_group('Data')
 
 data_arg.add_argument('--dataset_name', type=str, default="baidu")
 data_arg.add_argument('--version', type=str, default="_")
-data_arg.add_argument('--train_file', type=str, default="./+++data/_3_24_15_new/train.json")
-data_arg.add_argument('--valid_file', type=str, default="./+++data/_3_24_15_new/val.json")
-data_arg.add_argument('--test_file', type=str, default="./+++data/_3_24_15_new/test.json")
+data_arg.add_argument('--train_file', type=str, default="./+++data/_addtrain/train.json")
+data_arg.add_argument('--valid_file', type=str, default="./+++data/_addtrain/val.json")
+data_arg.add_argument('--test_file', type=str, default="./+++data/_addtrain/test.json")
 data_arg.add_argument('--train_size', type=int, default=0)
     # 文本的最大token长度
 data_arg.add_argument('--max_len', type=int, default=512)

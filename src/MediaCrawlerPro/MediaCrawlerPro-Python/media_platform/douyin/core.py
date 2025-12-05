@@ -117,7 +117,7 @@ class DouYinCrawler(AbstractCrawler):
                                                                                 config.PUBLISH_TIME_TYPE),
                                                                             search_id=dy_search_id
                                                                             )
-
+                    utils.logger.info(f"[DouYinCrawler.search] posts_res: {posts_res}")
                     page += 1
                     if "data" not in posts_res:
                         utils.logger.error(

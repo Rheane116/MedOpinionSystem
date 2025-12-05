@@ -91,12 +91,12 @@
 
                                                                         <input type="hidden" name="from" value="manage">
                                                                         
-                                                                            <button type="submit" class="btn btn-danger mt-2" style="color:white"><i class="ri-settings-4-fill pr-0">任务数据</i></button>        
+                                                                            <button type="submit" class="btn btn-danger mt-2" style="color:white"><i class="ri-settings-4-fill pr-0">任务整体数据</i></button>        
                                                                 </form>
                                                                 <form method="POST" action="/page/task/delete_raw">
                                                                     <input type="hidden" name="task_id1" value="{{task.task_id}}">
                                                                     
-                                                                        <button type="submit" class="btn btn-danger mt-2" style="color:white"><i class="ri-settings-4-fill pr-0">原始数据</i></button>        
+                                                                        <button type="submit" class="btn btn-danger mt-2" style="color:white"><i class="ri-settings-4-fill pr-0">仅爬虫原始数据</i></button>        
                                                                  </form>
                                                                 {% endif %}
                                                                 {% if task.status in [0, 3,5] and task.platform == "-"%}

@@ -7,9 +7,9 @@
 [max entities]: 20
 [max len mention]: 46
 [# samples without entity]: 66
-../../shared/task/model_input/81_.json
-[num samples]: 76
-[avg len]: 81.0
+../../shared/task/model_input/89_.json
+[num samples]: 42
+[avg len]: 137.85714285714286
 [avg triples]: 0.0
 [avg entities]: 0.0
 [max entities]: 0
@@ -21,7 +21,7 @@ DATA SUMMARY START:
      Ent Type Alphabet Size: 14
 ['医生', '医学道德', '医疗机构', '部门/科室', '诊疗水平', '收费水平', '社会口碑', '医疗监管', '服务管理', '环境/设施', '管理人员', '护士', '资源/团队', '人员待遇']
      Train  Instance Number: 859
-     Test   Instance Number: 76
+     Test   Instance Number: 42
 DATA SUMMARY END.
 Some weights of the model checkpoint at cpt_large were not used when initializing SeqEncoder: ['shared.weight', 'decoder.embed_tokens.weight', 'decoder.embed_positions.weight', 'decoder.layers.0.self_attn.k_proj.weight', 'decoder.layers.0.self_attn.k_proj.bias', 'decoder.layers.0.self_attn.v_proj.weight', 'decoder.layers.0.self_attn.v_proj.bias', 'decoder.layers.0.self_attn.q_proj.weight', 'decoder.layers.0.self_attn.q_proj.bias', 'decoder.layers.0.self_attn.out_proj.weight', 'decoder.layers.0.self_attn.out_proj.bias', 'decoder.layers.0.self_attn_layer_norm.weight', 'decoder.layers.0.self_attn_layer_norm.bias', 'decoder.layers.0.encoder_attn.k_proj.weight', 'decoder.layers.0.encoder_attn.k_proj.bias', 'decoder.layers.0.encoder_attn.v_proj.weight', 'decoder.layers.0.encoder_attn.v_proj.bias', 'decoder.layers.0.encoder_attn.q_proj.weight', 'decoder.layers.0.encoder_attn.q_proj.bias', 'decoder.layers.0.encoder_attn.out_proj.weight', 'decoder.layers.0.encoder_attn.out_proj.bias', 'decoder.layers.0.encoder_attn_layer_norm.weight', 'decoder.layers.0.encoder_attn_layer_norm.bias', 'decoder.layers.0.fc1.weight', 'decoder.layers.0.fc1.bias', 'decoder.layers.0.fc2.weight', 'decoder.layers.0.fc2.bias', 'decoder.layers.0.final_layer_norm.weight', 'decoder.layers.0.final_layer_norm.bias', 'decoder.layers.1.self_attn.k_proj.weight', 'decoder.layers.1.self_attn.k_proj.bias', 'decoder.layers.1.self_attn.v_proj.weight', 'decoder.layers.1.self_attn.v_proj.bias', 'decoder.layers.1.self_attn.q_proj.weight', 'decoder.layers.1.self_attn.q_proj.bias', 'decoder.layers.1.self_attn.out_proj.weight', 'decoder.layers.1.self_attn.out_proj.bias', 'decoder.layers.1.self_attn_layer_norm.weight', 'decoder.layers.1.self_attn_layer_norm.bias', 'decoder.layers.1.encoder_attn.k_proj.weight', 'decoder.layers.1.encoder_attn.k_proj.bias', 'decoder.layers.1.encoder_attn.v_proj.weight', 'decoder.layers.1.encoder_attn.v_proj.bias', 'decoder.layers.1.encoder_attn.q_proj.weight', 'decoder.layers.1.encoder_attn.q_proj.bias', 'decoder.layers.1.encoder_attn.out_proj.weight', 'decoder.layers.1.encoder_attn.out_proj.bias', 'decoder.layers.1.encoder_attn_layer_norm.weight', 'decoder.layers.1.encoder_attn_layer_norm.bias', 'decoder.layers.1.fc1.weight', 'decoder.layers.1.fc1.bias', 'decoder.layers.1.fc2.weight', 'decoder.layers.1.fc2.bias', 'decoder.layers.1.final_layer_norm.weight', 'decoder.layers.1.final_layer_norm.bias', 'decoder.layers.2.self_attn.k_proj.weight', 'decoder.layers.2.self_attn.k_proj.bias', 'decoder.layers.2.self_attn.v_proj.weight', 'decoder.layers.2.self_attn.v_proj.bias', 'decoder.layers.2.self_attn.q_proj.weight', 'decoder.layers.2.self_attn.q_proj.bias', 'decoder.layers.2.self_attn.out_proj.weight', 'decoder.layers.2.self_attn.out_proj.bias', 'decoder.layers.2.self_attn_layer_norm.weight', 'decoder.layers.2.self_attn_layer_norm.bias', 'decoder.layers.2.encoder_attn.k_proj.weight', 'decoder.layers.2.encoder_attn.k_proj.bias', 'decoder.layers.2.encoder_attn.v_proj.weight', 'decoder.layers.2.encoder_attn.v_proj.bias', 'decoder.layers.2.encoder_attn.q_proj.weight', 'decoder.layers.2.encoder_attn.q_proj.bias', 'decoder.layers.2.encoder_attn.out_proj.weight', 'decoder.layers.2.encoder_attn.out_proj.bias', 'decoder.layers.2.encoder_attn_layer_norm.weight', 'decoder.layers.2.encoder_attn_layer_norm.bias', 'decoder.layers.2.fc1.weight', 'decoder.layers.2.fc1.bias', 'decoder.layers.2.fc2.weight', 'decoder.layers.2.fc2.bias', 'decoder.layers.2.final_layer_norm.weight', 'decoder.layers.2.final_layer_norm.bias', 'decoder.layers.3.self_attn.k_proj.weight', 'decoder.layers.3.self_attn.k_proj.bias', 'decoder.layers.3.self_attn.v_proj.weight', 'decoder.layers.3.self_attn.v_proj.bias', 'decoder.layers.3.self_attn.q_proj.weight', 'decoder.layers.3.self_attn.q_proj.bias', 'decoder.layers.3.self_attn.out_proj.weight', 'decoder.layers.3.self_attn.out_proj.bias', 'decoder.layers.3.self_attn_layer_norm.weight', 'decoder.layers.3.self_attn_layer_norm.bias', 'decoder.layers.3.encoder_attn.k_proj.weight', 'decoder.layers.3.encoder_attn.k_proj.bias', 'decoder.layers.3.encoder_attn.v_proj.weight', 'decoder.layers.3.encoder_attn.v_proj.bias', 'decoder.layers.3.encoder_attn.q_proj.weight', 'decoder.layers.3.encoder_attn.q_proj.bias', 'decoder.layers.3.encoder_attn.out_proj.weight', 'decoder.layers.3.encoder_attn.out_proj.bias', 'decoder.layers.3.encoder_attn_layer_norm.weight', 'decoder.layers.3.encoder_attn_layer_norm.bias', 'decoder.layers.3.fc1.weight', 'decoder.layers.3.fc1.bias', 'decoder.layers.3.fc2.weight', 'decoder.layers.3.fc2.bias', 'decoder.layers.3.final_layer_norm.weight', 'decoder.layers.3.final_layer_norm.bias', 'decoder.layernorm_embedding.weight', 'decoder.layernorm_embedding.bias']
 - This IS expected if you are initializing SeqEncoder from the checkpoint of a model trained on another task or with another architecture (e.g. initializing a BertForSequenceClassification model from a BertForPretraining model).
@@ -38,20 +38,20 @@ train_file:./+++data/_addtrain/train_tmp.json
 class_fn:+++data/_addtrain/review_labels.json
 
 
-test_file:../../shared/task/model_input/81_.json
+test_file:../../shared/task/model_input/89_.json
 
 Missing keys: ['encoder.selfcrossattention.selflaters.3.entity_attention.in_proj_weight', 'encoder.selfcrossattention.selflaters.3.entity_attention.in_proj_bias', 'encoder.selfcrossattention.selflaters.3.entity_attention.out_proj.weight', 'encoder.selfcrossattention.selflaters.3.entity_attention.out_proj.bias', 'encoder.selfcrossattention.selflaters.3.entity_norm.weight', 'encoder.selfcrossattention.selflaters.3.entity_norm.bias', 'encoder.selfcrossattention.crosslayers.3.attention.self.query.weight', 'encoder.selfcrossattention.crosslayers.3.attention.self.query.bias', 'encoder.selfcrossattention.crosslayers.3.attention.self.key.weight', 'encoder.selfcrossattention.crosslayers.3.attention.self.key.bias', 'encoder.selfcrossattention.crosslayers.3.attention.self.value.weight', 'encoder.selfcrossattention.crosslayers.3.attention.self.value.bias', 'encoder.selfcrossattention.crosslayers.3.attention.output.dense.weight', 'encoder.selfcrossattention.crosslayers.3.attention.output.dense.bias', 'encoder.selfcrossattention.crosslayers.3.attention.output.LayerNorm.weight', 'encoder.selfcrossattention.crosslayers.3.attention.output.LayerNorm.bias', 'encoder.selfcrossattention.crosslayers.3.intermediate.dense.weight', 'encoder.selfcrossattention.crosslayers.3.intermediate.dense.bias', 'encoder.selfcrossattention.crosslayers.3.output.dense.weight', 'encoder.selfcrossattention.crosslayers.3.output.dense.bias', 'encoder.selfcrossattention.crosslayers.3.output.LayerNorm.weight', 'encoder.selfcrossattention.crosslayers.3.output.LayerNorm.bias']
 Unexpected keys: []
-7.049362897872925
+3.6049184799194336
 -----------No Overlap------------
-num gold entity =  0  num pred entity =  235  num correct entity= 0
+num gold entity =  0  num pred entity =  143  num correct entity= 0
 entity precision =  0.0  entity recall =  -1  entity f1 =  -1
 -------------Overlap----------------
-num gold entity =  0  num pred entity =  235  num correct pred_entity= 0.0  num correct gold_entity= 0.0
+num gold entity =  0  num pred entity =  143  num correct pred_entity= 0.0  num correct gold_entity= 0.0
 entity precision =  0.0  entity recall =  -1  entity f1 =  -1
 ---------No Overlap------------
-gold_num =  0  pred_num =  81  right_num =  0
+gold_num =  0  pred_num =  29  right_num =  0
 precision =  0.0  recall =  -1  f1_value =  -1
 -----------Overlap-------------
-gold_num =  0  pred_num =  81  right_num_pred =  0.0  right_num_gold =  0.0
+gold_num =  0  pred_num =  29  right_num_pred =  0.0  right_num_gold =  0.0
 precision =  0.0  recall =  -1  f1_value =  -1

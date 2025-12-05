@@ -18,8 +18,8 @@ from constant import MYSQL_ACCOUNT_SAVE
 
 TASK_ID = -1
 USERNAME = "fawn"
-PLATFORM = "bili"
-KEYWORDS = "山东大学齐鲁医院"
+PLATFORM = "zhihu"
+KEYWORDS = "阜外深圳"
 
 #START_TIME = '01/01/2000'
 #END_TIME = '03/03/2024'
@@ -42,7 +42,7 @@ ACCOUNT_POOL_SAVE_TYPE = os.getenv("ACCOUNT_POOL_SAVE_TYPE", MYSQL_ACCOUNT_SAVE)
 START_PAGE = 1
 
 # 爬取视频/帖子的数量控制
-CRAWLER_MAX_NOTES_COUNT = 50
+CRAWLER_MAX_NOTES_COUNT = 500
 
 # 并发爬虫数量控制（请勿对平台发起大规模请求，并发控制仅限用于学习python的并发控制技术⚠️⚠️）
 MAX_CONCURRENCY_NUM = 1
@@ -51,10 +51,10 @@ MAX_CONCURRENCY_NUM = 1
 ENABLE_GET_COMMENTS = True
 
 # 是否开启爬二级评论模式, 默认不开启爬二级评论
-ENABLE_GET_SUB_COMMENTS = False
+ENABLE_GET_SUB_COMMENTS = True
 
 # 有的帖子评论数量太大了，这个变量用于一个帖子评论的最大数量，0表示不限制
-PER_NOTE_MAX_COMMENTS_COUNT = 50
+PER_NOTE_MAX_COMMENTS_COUNT = 0
 
 # 是否开启日志打印输出到文件中
 ENABLE_LOG_FILE = True

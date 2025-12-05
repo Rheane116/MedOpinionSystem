@@ -128,7 +128,7 @@ class DouyinDbStoreImplement(AbstractStore):
         aweme_detail: Dict = await query_content_by_content_id(content_id=aweme_id)
         if not aweme_detail:
             content_item["add_ts"] = utils.get_current_timestamp()
-            content_item["task_id"] = config.TASK_ID
+            #content_item["task_id"] = config.TASK_ID
             if content_item.get("title"):
                 await add_new_content(content_item)
         else:
@@ -150,7 +150,7 @@ class DouyinDbStoreImplement(AbstractStore):
         comment_detail: Dict = await query_comment_by_comment_id(comment_id=comment_id)
         if not comment_detail:
             comment_item["add_ts"] = utils.get_current_timestamp()
-            comment_item["task_id"] = config.TASK_ID
+            #comment_item["task_id"] = config.TASK_ID
             await add_new_comment(comment_item)
         else:
             await update_comment_by_comment_id(comment_id, comment_item=comment_item)

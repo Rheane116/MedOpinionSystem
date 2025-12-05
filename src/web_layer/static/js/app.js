@@ -230,7 +230,10 @@ Index Of Script
         Data tables
         -----------------------------------------------------------------------*/
         if($.fn.DataTable){
-            const table = $('.data-table').DataTable();
+            // 统一初始化 .data-table，默认按第 1 列（任务编号等）降序排列
+            const table = $('.data-table').DataTable({
+                order: [[0, 'desc']]
+            });
         }
 
 
