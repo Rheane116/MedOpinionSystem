@@ -3,6 +3,9 @@ from threading import Thread
 from copy import deepcopy
 import json
 import sys
+import time
+
+time_start = time.time()
 
 def str2bool(v):
     return v.lower() in ('true')
@@ -152,10 +155,15 @@ elif args.task_m_id:
 
 
 os.environ["CUDA_VISIBLE_DEVICES"] = args.visible_gpus
+
 #for arg in vars(args):
 #    print(arg, ":",  getattr(args, arg))
 
 import torch
+
+torch.cuda.set_device(0)
+torch.cuda.set_per_process_memory_fraction(24/32, device=0)
+
 import random
 import numpy as np
 #from utils.data_infer import build_data
@@ -226,6 +234,9 @@ print(f"\ntrain_file:{args.train_file}\n")
 print(f"\nclass_fn:{args.class_fn}\n")
 print(f"\ntest_file:{args.test_file}\n")
 engine.load_state_dict(args.checkpoint_directory + "/%s.model" % args.model_ids)
+
+time_before_eval = time.time()
+
 if args.task_id:
     engine.eval_model(data.test_loader, data.entity_type_alphabet, data.relational_alphabet,
                     log_fn=os.path.join(args.prediction_directory, args.task_id + '_'), print_pred=True)
@@ -237,7 +248,9 @@ elif args.test_file:
     engine.eval_model(data.test_loader, data.entity_type_alphabet, data.relational_alphabet,
                     log_fn=os.path.join(args.prediction_directory, datetime.now().strftime('%m-%d-%H-%M-%S')), print_pred=True)
       
-
+time_end_eval = time.time()
+print(f"Time taken before evalution: {time_before_eval - time_start} seconds")
+print(f"Time taken for evaluation: {time_end_eval - time_before_eval} seconds")
 '''engine = Trainer(model, data, args, args.max_epoch, args.start_eval, delay_to_gpu=True)
 
 num_gpu = torch.cuda.device_count()

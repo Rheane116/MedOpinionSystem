@@ -22,6 +22,9 @@ from model.m_zhihu import ZhihuContent, ZhihuCreator
 from pkg.account_pool.pool import AccountWithIpPoolManager
 from pkg.proxy.proxy_ip_pool import ProxyIpPool, create_ip_pool
 from pkg.tools import utils
+from pkg.tools.crawler_rate_stats import *
+from pkg.tools.crawler_util import *
+from pkg.tools.time_util import *
 from repo.platform_save_data import zhihu as zhihu_store
 from var import crawler_type_var, source_keyword_var
 
@@ -34,6 +37,7 @@ class ZhihuCrawler(AbstractCrawler):
 
     def __init__(self) -> None:
         self.zhihu_client = ZhiHuClient()
+        self.crawlerRateStats = CrawlerRateStats()
 
     async def async_initialize(self):
         """
@@ -96,6 +100,7 @@ class ZhihuCrawler(AbstractCrawler):
         Returns:
 
         """
+        #self.crawlerRateStats.start_crawling(platform=config.PLATFORM, keyword=config.KEYWORDS, max_note=config.CRAWLER_MAX_NOTES_COUNT, max_comment=config.PER_NOTE_MAX_COMMENTS_COUNT, if_level=config.ENABLE_GET_SUB_COMMENTS)
         utils.logger.info("[ZhihuCrawler.search] Begin search zhihu keywords")
         zhihu_limit_count = 20  # zhihu limit page fixed value
         if config.CRAWLER_MAX_NOTES_COUNT < zhihu_limit_count:

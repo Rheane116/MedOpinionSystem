@@ -20,6 +20,12 @@ def task():
     tasks_info = []
     for task in tasks:
         tasks_info.append(task.to_dict())
+    # 按任务编号降序排列，确保页面“任务列表”默认按任务编号从大到小展示
+    try:
+        tasks_info = sorted(tasks_info, key=lambda x: int(x['task_id']), reverse=True)
+    except (ValueError, TypeError, KeyError):
+        # 如果 task_id 不是纯数字或缺失，则回退为字符串降序排序
+        tasks_info = sorted(tasks_info, key=lambda x: str(x.get('task_id', '')), reverse=True)
     return render_template("task.html", username=username, user_role=user_role, tasks=tasks_info)
 
 @task_bp.route('/create', methods=["POST"])

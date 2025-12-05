@@ -7,7 +7,7 @@ python +++main.py \
     --repeat_gt_entities 50 \
     --repeat_gt_triples 20 \
     --hybrid True \
-    --batch_size 5 \
+    --batch_size 3 \
     --eval_batch_size 8 \
     --entity_queries_num 80 \
     --na_ent_coef -1 \
